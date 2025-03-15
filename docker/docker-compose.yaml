@@ -134,6 +134,18 @@ services:
     networks:
       - opensearch-net
 
+  fluent-bit-django:
+    image: fluent/fluent-bit:latest
+    container_name: fluent-bit-django
+    volumes:
+      - ./fluent-bit/fluent-bit-django.conf:/fluent-bit/etc/fluent-bit.conf
+      # - ./fluent-bit/parsers-django.conf:/fluent-bit/etc/parsers.conf
+      - /home/radekzitek/Code/qlogger/lilu/logs:/var/lib/logs:ro # Needed for docker input plugin.
+    depends_on:
+      - opensearch-node1
+    networks:
+      - opensearch-net
+
 networks:
   opensearch-net:
 
