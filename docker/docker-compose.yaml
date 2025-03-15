@@ -6,7 +6,7 @@ services:
       - "6379:6379"
       - "8001:8001" # RedisInsight UI
     volumes:
-      - redis_data:/data
+      - /data/containers/volumes/redis_data:/data
     restart: unless-stopped
 
   opensearch-node1: # This is also the hostname of the container within the Docker network (i.e. https://opensearch-node1/)
@@ -28,12 +28,13 @@ services:
         soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
         hard: 65536
     volumes:
-      - opensearch-data1:/usr/share/opensearch/data # Creates volume called opensearch-data1 and mounts it to the container
+      - /data/containers/volumes/opensearch_data1:/usr/share/opensearch/data # Creates volume called opensearch-data1 and mounts it to the container
     ports:
       - 9200:9200 # REST API
       - 9600:9600 # Performance Analyzer
     networks:
       - opensearch-net # All of the containers will join the same Docker bridge network
+      
   opensearch-node2:
     image: opensearchproject/opensearch:latest # This should be the same image used for opensearch-node1 to avoid issues
     container_name: opensearch-node2
@@ -53,9 +54,10 @@ services:
         soft: 65536
         hard: 65536
     volumes:
-      - opensearch-data2:/usr/share/opensearch/data
+      - /data/containers/volumes/opensearch_data2:/usr/share/opensearch/data
     networks:
       - opensearch-net
+
   opensearch-dashboards:
     image: opensearchproject/opensearch-dashboards:latest # Make sure the version of opensearch-dashboards matches the version of opensearch installed on other nodes
     container_name: opensearch-dashboards
@@ -68,12 +70,66 @@ services:
     networks:
       - opensearch-net
 
-  fluent-bit:
+  mongodb:
+    image: mongodb/mongodb-community-server:latest # Or specify a version, e.g., mongo:6.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - /data/containers/volumes/mongodb_data:/data/db
+      - /data/containers/volumes/mongodb_config:/data/configdb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: user1234 # Change this!
+    restart: unless-stopped
+    logging: # Explicitly set logging driver. Optional, defaults to json-file
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  postgres:
+    image: postgres:latest
+    container_name: postgresdb
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: user1234
+      POSTGRES_DB: liludb
+    ports:
+      - "5432:5432"
+    volumes:
+      - /data/containers/volumes/postgres_data:/var/lib/postgresql/data/
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: my_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: radekzitek@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: user1234
+    ports:
+      - "5050:80"
+    volumes:
+      - /data/containers/volumes/pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres # Ensure postgres is running before pgadmin
+
+  fluent-bit-cpu:
     image: fluent/fluent-bit:latest
     container_name: fluent-bit-cpu
     volumes:
       - ./fluent-bit/fluent-bit-cpu.conf:/fluent-bit/etc/fluent-bit.conf
+    networks:
+      - opensearch-net
+
+  fluent-bit-mongodb:
+    image: fluent/fluent-bit:latest
+    container_name: fluent-bit-mongodb
+    volumes:
+      - ./fluent-bit/fluent-bit-mongodb.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./fluent-bit/parsers-mongodb.conf:/fluent-bit/etc/parsers.conf
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro # Needed for docker input plugin.
     depends_on:
+      - mongodb
       - opensearch-node1
     networks:
       - opensearch-net
@@ -83,5 +139,8 @@ networks:
 
 volumes:
   redis_data:
-  opensearch-data1:
-  opensearch-data2:
+  opensearch_data1:
+  opensearch_data2:
+  mongodb_data:
+  postgres_data:
+  pgadmin_data:
