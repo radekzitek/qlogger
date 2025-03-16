@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Team List</title>
+</head>
+<body>
+    <h1>Team List</h1>
+    <ul>
+        {% for team in teams %}
+            <li>
+                <a href="{% url 'team_detail' team.id %}">{{ team.name }}</a>
+                - {{ team.description }}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'create_team' %}">Create New Team</a>
+</body>
+</html>
