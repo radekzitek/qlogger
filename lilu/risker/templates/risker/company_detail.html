@@ -1,0 +1,6 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Company Details</h1>
+<h2>{{ company.name }}</h2>
+<p>Top Level Department: {{ company.top_level_department }}</p>
+<a href="{% url 'company_list' %}">Back to List</a>
+{% endblock %}
