@@ -9,6 +9,14 @@
             <h5 class="card-title">{{ department.name }}</h5>
             <p class="card-text">Company: {{ department.company.name }}</p>
             <p class="card-text">
+                Manager Position:
+                {% if department.manager_position %}
+                {{ department.manager_position.title }}
+                {% else %}
+                None
+                {% endif %}
+            </p>
+            <p class="card-text">
                 Parent Department:
                 {% if department.parent_department %}
                 {{ department.parent_department.name }}

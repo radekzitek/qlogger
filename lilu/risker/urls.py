@@ -89,4 +89,5 @@ urlpatterns = [
         name='teamleaderassignment_delete',
     ),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('organization/<int:company_id>/', views.organization_view, name='organization'),
 ]

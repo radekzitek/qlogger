@@ -92,6 +92,9 @@ class PositionListView(ListView):
     template_name = 'risker/position_list.html'
     context_object_name = 'positions'
 
+    def get_queryset(self):
+        return Position.objects.order_by('department__name', 'title')
+
 
 class PositionDetailView(DetailView):
     model = Position
@@ -336,3 +339,36 @@ class TeamLeaderAssignmentDeleteView(DeleteView):
 
 def dashboard(request):
     return render(request, 'risker/dashboard.html')
+
+
+def organization_view(request, company_id):
+    company = get_object_or_404(Company, pk=company_id)
+    top_level_department = company.top_level_department
+    departments = Department.objects.filter(company=company).exclude(pk=top_level_department.pk if top_level_department else None)
+
+    def build_department_structure(department):
+        structure = {
+            'department': department,
+            'manager_position': department.manager_position,
+            'positions': [],
+            'sub_departments': []
+        }
+        for position in Position.objects.filter(department=department):
+            employee_assignment = EmployeePositionAssignment.objects.filter(position=position).first()
+            employee = employee_assignment.employee if employee_assignment else None
+            structure['positions'].append({'position': position, 'employee': employee})
+
+        for sub_department in Department.objects.filter(parent_department=department):
+            structure['sub_departments'].append(build_department_structure(sub_department))
+        return structure
+
+    organization_structure = {
+        'company': company,
+        'top_level_department': top_level_department,
+        'departments': []
+    }
+
+    if top_level_department:
+        organization_structure['departments'].append(build_department_structure(top_level_department))
+
+    return render(request, 'risker/organization.html', {'organization': organization_structure})

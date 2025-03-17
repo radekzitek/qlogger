@@ -1,0 +1,35 @@
+{% load django_bootstrap5 %}
+
+<div class="card mb-3">
+    <div class="card-header">
+        Department: {{ department_structure.department.name }}
+    </div>
+    <div class="card-body">
+        {% if department_structure.manager_position %}
+            <p>Manager Position: {{ department_structure.manager_position.title }}</p>
+        {% endif %}
+
+        {% if department_structure.positions %}
+            <h5 class="card-title">Positions:</h5>
+            <ul>
+                {% for position_data in department_structure.positions %}
+                    <li>
+                        {{ position_data.position.title }}
+                        {% if position_data.employee %}
+                            - Employee: {{ position_data.employee.first_name }} {{ position_data.employee.last_name }}
+                        {% else %}
+                            - NEOBSAZENO
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if department_structure.sub_departments %}
+            <h5 class="card-title">Sub Departments:</h5>
+            {% for sub_department_structure in department_structure.sub_departments %}
+                {% include 'risker/department_structure.html' with department_structure=sub_department_structure %}
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
