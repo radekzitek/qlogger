@@ -12,6 +12,7 @@ from .models import (
     TeamMembership,
     TeamLeaderAssignment,
 )
+from .forms import EmployeePositionAssignmentForm, TeamMembershipForm, TeamLeaderAssignmentForm
 
 # Company Views
 
@@ -241,14 +242,16 @@ class EmployeePositionAssignmentDetailView(DetailView):
 
 class EmployeePositionAssignmentCreateView(CreateView):
     model = EmployeePositionAssignment
-    fields = ['employee', 'position', 'assigned_date']
+    form_class = EmployeePositionAssignmentForm  # Use the form
+    # fields = ['employee', 'position', 'assigned_date']
     template_name = 'risker/employeepositionassignment_form.html'
     success_url = reverse_lazy('employeepositionassignment_list')
 
 
 class EmployeePositionAssignmentUpdateView(UpdateView):
     model = EmployeePositionAssignment
-    fields = ['employee', 'position', 'assigned_date']
+    form_class = EmployeePositionAssignmentForm  # Use the form
+    # fields = ['employee', 'position', 'assigned_date']
     template_name = 'risker/employeepositionassignment_form.html'
     success_url = reverse_lazy('employeepositionassignment_list')
 
@@ -275,14 +278,16 @@ class TeamMembershipDetailView(DetailView):
 
 class TeamMembershipCreateView(CreateView):
     model = TeamMembership
-    fields = ['employee', 'team', 'joined_date']
+    form_class = TeamMembershipForm
+    # fields = ['employee', 'team', 'joined_date']
     template_name = 'risker/teammembership_form.html'
     success_url = reverse_lazy('teammembership_list')
 
 
 class TeamMembershipUpdateView(UpdateView):
     model = TeamMembership
-    fields = ['employee', 'team', 'joined_date']
+    form_class = TeamMembershipForm
+    # fields = ['employee', 'team', 'joined_date']
     template_name = 'risker/teammembership_form.html'
     success_url = reverse_lazy('teammembership_list')
 
@@ -309,14 +314,16 @@ class TeamLeaderAssignmentDetailView(DetailView):
 
 class TeamLeaderAssignmentCreateView(CreateView):
     model = TeamLeaderAssignment
-    fields = ['team', 'leader', 'assigned_date']
+    form_class = TeamLeaderAssignmentForm
+    # fields = ['team', 'leader', 'assigned_date']
     template_name = 'risker/teamleaderassignment_form.html'
     success_url = reverse_lazy('teamleaderassignment_list')
 
 
 class TeamLeaderAssignmentUpdateView(UpdateView):
     model = TeamLeaderAssignment
-    fields = ['team', 'leader', 'assigned_date']
+    form_class = TeamLeaderAssignmentForm
+    # fields = ['team', 'leader', 'assigned_date']
     template_name = 'risker/teamleaderassignment_form.html'
     success_url = reverse_lazy('teamleaderassignment_list')
 
@@ -325,3 +332,7 @@ class TeamLeaderAssignmentDeleteView(DeleteView):
     model = TeamLeaderAssignment
     template_name = 'risker/teamleaderassignment_confirm_delete.html'
     success_url = reverse_lazy('teamleaderassignment_list')
+
+
+def dashboard(request):
+    return render(request, 'risker/dashboard.html')

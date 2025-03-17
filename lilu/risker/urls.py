@@ -88,4 +88,5 @@ urlpatterns = [
         views.TeamLeaderAssignmentDeleteView.as_view(),
         name='teamleaderassignment_delete',
     ),
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]

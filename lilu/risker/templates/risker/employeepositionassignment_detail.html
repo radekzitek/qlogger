@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <h1>Employee Position Assignment Details</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ employee_position_assignment.employee.first_name }} {{ employee_position_assignment.employee.last_name }} - {{ employee_position_assignment.position.title }}</h5>
+            <p class="card-text">Employee: {{ employee_position_assignment.employee.first_name }} {{ employee_position_assignment.employee.last_name }}</p>
+            <p class="card-text">Position: {{ employee_position_assignment.position.title }}</p>
+            <p class="card-text">Assigned Date: {{ employee_position_assignment.assigned_date }}</p>
+            <a href="{% url 'employeepositionassignment_list' %}" class="btn btn-primary">Back to List</a>
+            <a href="{% url 'employeepositionassignment_update' employee_position_assignment.pk %}" class="btn btn-secondary">Edit</a>
+            <a href="{% url 'employeepositionassignment_delete' employee_position_assignment.pk %}" class="btn btn-danger">Delete</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

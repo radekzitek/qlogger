@@ -94,7 +94,7 @@ class EmployeePositionAssignment(BaseModel):
     """
     employee = models.ForeignKey('Employee', on_delete=models.CASCADE)
     position = models.ForeignKey('Position', on_delete=models.CASCADE)
-    assigned_date = models.DateField(auto_now_add=True)
+    assigned_date = models.DateField()
 
     class Meta:
         unique_together = ('employee', 'position')
@@ -107,7 +107,7 @@ class TeamMembership(BaseModel):
     """
     employee = models.ForeignKey('Employee', on_delete=models.CASCADE)
     team = models.ForeignKey('Team', on_delete=models.CASCADE)
-    joined_date = models.DateField(auto_now_add=True)
+    joined_date = models.DateField()
 
     class Meta:
         unique_together = ('employee', 'team')
@@ -120,7 +120,7 @@ class TeamLeaderAssignment(BaseModel):
     """
     team = models.ForeignKey('Team', on_delete=models.CASCADE)
     leader = models.ForeignKey('Employee', on_delete=models.CASCADE)
-    assigned_date = models.DateField(auto_now_add=True)
+    assigned_date = models.DateField()
 
     class Meta:
         unique_together = ('team', 'leader')
