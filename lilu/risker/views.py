@@ -67,14 +67,14 @@ class DepartmentDetailView(DetailView):
 
 class DepartmentCreateView(CreateView):
     model = Department
-    fields = ['company', 'name', 'parent_department']
+    fields = ['company', 'name', 'manager_position', 'parent_department']
     template_name = 'risker/department_form.html'
     success_url = reverse_lazy('department_list')
 
 
 class DepartmentUpdateView(UpdateView):
     model = Department
-    fields = ['company', 'name', 'parent_department']
+    fields = ['company', 'name', 'manager_position', 'parent_department']
     template_name = 'risker/department_form.html'
     success_url = reverse_lazy('department_list')
 

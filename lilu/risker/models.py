@@ -34,6 +34,8 @@ class Department(BaseModel):
     name = models.CharField(max_length=255)
     parent_department = models.ForeignKey(
         'self', on_delete=models.SET_NULL, null=True, blank=True, related_name='sub_departments')
+    manager_position = models.ForeignKey(
+        'Position', on_delete=models.SET_NULL, null=True, blank=True, related_name='managed_departments')
 
     def __str__(self):
         return self.name
