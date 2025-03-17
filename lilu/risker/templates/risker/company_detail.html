@@ -1,6 +1,23 @@
-{% extends 'base.html' %} {% block content %}
-<h1>Company Details</h1>
-<h2>{{ company.name }}</h2>
-<p>Top Level Department: {{ company.top_level_department }}</p>
-<a href="{% url 'company_list' %}">Back to List</a>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h1>Company Details</h1>
+  <div class="card">
+    <div class="card-body">
+      <h2 class="card-title">{{ company.name }}</h2>
+      <p class="card-text">
+        Top Level Department:
+        {% if company.top_level_department %}
+        {{ company.top_level_department }}
+        {% else %}
+        None
+        {% endif %}
+      </p>
+      <a href="{% url 'company_list' %}" class="btn btn-primary">Back to List</a>
+      <a href="{% url 'company_update' company.pk %}" class="btn btn-secondary">Edit</a>
+      <a href="{% url 'company_delete' company.pk %}" class="btn btn-danger">Delete</a>
+    </div>
+  </div>
+</div>
 {% endblock %}

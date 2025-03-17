@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <h1>Position Details</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ position.title }}</h5>
+            <p class="card-text">Department: {{ position.department.name }}</p>
+            <a href="{% url 'position_list' %}" class="btn btn-primary">Back to List</a>
+            <a href="{% url 'position_update' position.pk %}" class="btn btn-secondary">Edit</a>
+            <a href="{% url 'position_delete' position.pk %}" class="btn btn-danger">Delete</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
