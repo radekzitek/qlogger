@@ -12,7 +12,8 @@ from .models import (
     TeamMembership,
     TeamLeaderAssignment,
 )
-from .forms import EmployeePositionAssignmentForm, TeamMembershipForm, TeamLeaderAssignmentForm
+from .forms import EmployeePositionAssignmentForm, TeamMembershipForm, TeamLeaderAssignmentForm, EmployeeForm
+from django.utils import timezone
 
 # Company Views
 
@@ -71,6 +72,18 @@ class DepartmentCreateView(CreateView):
     template_name = 'risker/department_form.html'
     success_url = reverse_lazy('department_list')
 
+    def get_initial(self):
+        initial = super().get_initial()
+        parent_department_id = self.request.GET.get('parent_department')
+        if parent_department_id:
+            initial['parent_department'] = parent_department_id
+            try:
+                parent_department = Department.objects.get(pk=parent_department_id)
+                initial['company'] = parent_department.company.pk
+            except Department.DoesNotExist:
+                pass  # Handle the case where the parent department doesn't exist
+        return initial
+
 
 class DepartmentUpdateView(UpdateView):
     model = Department
@@ -107,6 +120,13 @@ class PositionCreateView(CreateView):
     fields = ['department', 'title']
     template_name = 'risker/position_form.html'
     success_url = reverse_lazy('position_list')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        department_id = self.request.GET.get('department')
+        if department_id:
+            initial['department'] = department_id
+        return initial
 
 
 class PositionUpdateView(UpdateView):
@@ -345,7 +365,8 @@ def dashboard(request):
 def organization_view(request, company_id):
     company = get_object_or_404(Company, pk=company_id)
     top_level_department = company.top_level_department
-    departments = Department.objects.filter(company=company).exclude(pk=top_level_department.pk if top_level_department else None)
+    departments = Department.objects.filter(company=company).exclude(
+        pk=top_level_department.pk if top_level_department else None)
 
     def build_department_structure(department):
         structure = {
@@ -355,12 +376,21 @@ def organization_view(request, company_id):
             'sub_departments': []
         }
         for position in Position.objects.filter(department=department):
-            employee_assignment = EmployeePositionAssignment.objects.filter(position=position).first()
-            employee = employee_assignment.employee if employee_assignment else None
-            structure['positions'].append({'position': position, 'employee': employee})
+            employee_assignments = EmployeePositionAssignment.objects.filter(
+                position=position).order_by('assigned_date')
+            assignments_data = []
+            for assignment in employee_assignments:
+                assignments_data.append({
+                    'employee': assignment.employee,
+                    'assigned_date': assignment.assigned_date
+                })
+            assignments_data.reverse()  # Reverse the order here
+            structure['positions'].append(
+                {'position': position, 'employee_assignments': assignments_data})
 
         for sub_department in Department.objects.filter(parent_department=department):
-            structure['sub_departments'].append(build_department_structure(sub_department))
+            structure['sub_departments'].append(
+                build_department_structure(sub_department))
         return structure
 
     organization_structure = {
@@ -370,6 +400,41 @@ def organization_view(request, company_id):
     }
 
     if top_level_department:
-        organization_structure['departments'].append(build_department_structure(top_level_department))
+        organization_structure['departments'].append(
+            build_department_structure(top_level_department))
 
     return render(request, 'risker/organization.html', {'organization': organization_structure})
+
+
+class EmployeePositionAssignmentCreateView(CreateView):
+    model = EmployeePositionAssignment
+    form_class = EmployeePositionAssignmentForm  # Use the form
+    template_name = 'risker/employeepositionassignment_form.html'
+    success_url = reverse_lazy('employeepositionassignment_list')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        position_id = self.request.GET.get('position')
+        if position_id:
+            initial['position'] = position_id
+        return initial
+    
+
+class EmployeeCreateAndAssignView(View):
+    template_name = 'risker/employee_create_and_assign.html'
+
+    def get(self, request):
+        position_id = request.GET.get('position')
+        position = get_object_or_404(Position, pk=position_id)
+        form = EmployeeForm(initial={'company': position.department.company})
+        return render(request, self.template_name, {'form': form, 'position': position})
+
+    def post(self, request):
+        position_id = request.GET.get('position')
+        position = get_object_or_404(Position, pk=position_id)
+        form = EmployeeForm(request.POST)
+        if form.is_valid():
+            employee = form.save()
+            EmployeePositionAssignment.objects.create(employee=employee, position=position, assigned_date=timezone.now())
+            return redirect('employee_detail', pk=employee.pk)  # Or redirect to organization view
+        return render(request, self.template_name, {'form': form, 'position': position})

@@ -1,5 +1,5 @@
 from django import forms
-from .models import EmployeePositionAssignment, TeamMembership, TeamLeaderAssignment
+from .models import EmployeePositionAssignment, TeamMembership, TeamLeaderAssignment, Employee
 
 
 class TeamMembershipForm(forms.ModelForm):
@@ -27,3 +27,18 @@ class EmployeePositionAssignmentForm(forms.ModelForm):
         widgets = {
             'assigned_date': forms.DateInput(attrs={'type': 'date'}),
         }
+
+
+class EmployeeForm(forms.ModelForm):
+    class Meta:
+        model = Employee
+        fields = [
+            'company',
+            'first_name',
+            'last_name',
+            'user_name',
+            'password',
+            'email',
+            'phone',
+            'address',
+        ]

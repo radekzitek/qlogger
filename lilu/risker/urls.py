@@ -90,4 +90,5 @@ urlpatterns = [
     ),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('organization/<int:company_id>/', views.organization_view, name='organization'),
+    path('employees/create_and_assign/', views.EmployeeCreateAndAssignView.as_view(), name='employee_create_and_assign'),
 ]
