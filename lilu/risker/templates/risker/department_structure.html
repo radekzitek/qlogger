@@ -2,11 +2,11 @@
 
 <div class="card mb-3">
     <div class="card-header">
-        Department: {{ department_structure.department.name }}
+        Department: <a href="{% url 'department_detail' department_structure.department.pk %}">{{ department_structure.department.name }}</a>
     </div>
     <div class="card-body">
         {% if department_structure.manager_position %}
-            <p>Manager Position: {{ department_structure.manager_position.title }}</p>
+            <p>Manager Position: <a href="{% url 'position_detail' department_structure.manager_position.pk %}">{{ department_structure.manager_position.title }}</a></p>
         {% endif %}
 
         {% if department_structure.positions %}
@@ -14,9 +14,9 @@
             <ul>
                 {% for position_data in department_structure.positions %}
                     <li>
-                        {{ position_data.position.title }}
+                        <a href="{% url 'position_detail' position_data.position.pk %}">{{ position_data.position.title }}</a>
                         {% if position_data.employee %}
-                            - Employee: {{ position_data.employee.first_name }} {{ position_data.employee.last_name }}
+                            - Employee: <a href="{% url 'employee_detail' position_data.employee.pk %}">{{ position_data.employee.first_name }} {{ position_data.employee.last_name }}</a>
                         {% else %}
                             - NEOBSAZENO
                         {% endif %}

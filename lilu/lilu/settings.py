@@ -59,7 +59,7 @@ LOGGING = {
             'formatter': 'simple',
         },
         'file': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': 'logs/django.log',
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
@@ -67,7 +67,7 @@ LOGGING = {
             'formatter': 'verbose',
         },
         'jsonfile': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': 'logs/django.json.log',
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
@@ -109,7 +109,7 @@ SECRET_KEY = 'django-insecure-yb3yj@dyy_89*v&056xhaq8xwh&!omny4c3(@8wjvycxhg^8c-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -161,6 +161,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'risker.context_processors.all_companies', # Add this line
             ],
         },
     },

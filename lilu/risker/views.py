@@ -338,7 +338,8 @@ class TeamLeaderAssignmentDeleteView(DeleteView):
 
 
 def dashboard(request):
-    return render(request, 'risker/dashboard.html')
+    companies = Company.objects.all()
+    return render(request, 'risker/dashboard.html', {'companies': companies})
 
 
 def organization_view(request, company_id):

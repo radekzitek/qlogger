@@ -16,9 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import handler404
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tasker/', include('tasker.urls')),
     path('risker/', include('risker.urls')),
 ]
+
+handler404 = 'lilu.views.custom_404'
