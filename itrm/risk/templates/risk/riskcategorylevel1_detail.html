@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Risk Category Level 1 Detail</h1>
+  <dl>
+    <dt>Name:</dt>
+    <dd>{{ riskcategorylevel1.name }}</dd>
+    <dt>Description:</dt>
+    <dd>{{ riskcategorylevel1.description }}</dd>
+  </dl>
+  <a href="{% url 'riskcategorylevel1_list' %}" class="btn btn-secondary">Back to List</a>
+  <a href="{% url 'riskcategorylevel1_update' riskcategorylevel1.pk %}" class="btn btn-primary">Edit</a>
+{% endblock %}

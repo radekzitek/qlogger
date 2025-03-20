@@ -1,5 +1,5 @@
 """
-URL configuration for lilu project.
+URL configuration for itrm project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
@@ -16,11 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.conf.urls import handler404
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('orger/', include('orger.urls')),
+    path('risk/', include('risk.urls')),
+    path('org/', include('org.urls')),
 ]
-
-handler404 = 'lilu.views.custom_404'

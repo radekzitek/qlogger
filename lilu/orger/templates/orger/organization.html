@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <h1>Organization Structure</h1>
+
+    <h2>Company: {{ organization.company.name }}</h2>
+    {% if organization.top_level_department %}
+        <h3>Top Level Department: {{ organization.top_level_department.name }}</h3>
+    {% endif %}
+
+    {% if organization.departments %}
+        {% for department_structure in organization.departments %}
+            {% include 'orger/department_structure.html' with department_structure=department_structure %}
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

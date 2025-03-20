@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <h1>Team Membership Details</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ team_membership.employee.first_name }} {{ team_membership.employee.last_name }} - {{ team_membership.team.name }}</h5>
+            <p class="card-text">Employee: {{ team_membership.employee.first_name }} {{ team_membership.employee.last_name }}</p>
+            <p class="card-text">Team: {{ team_membership.team.name }}</p>
+            <p class="card-text">Joined Date: {{ team_membership.joined_date }}</p>
+            <a href="{% url 'teammembership_list' %}" class="btn btn-primary">Back to List</a>
+            <a href="{% url 'teammembership_update' team_membership.pk %}" class="btn btn-secondary">Edit</a>
+            <a href="{% url 'teammembership_delete' team_membership.pk %}" class="btn btn-danger">Delete</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

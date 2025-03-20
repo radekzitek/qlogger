@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Risk Category Level 1 List</h1>
+  <a href="{% url 'riskcategorylevel1_create' %}" class="btn btn-primary">Create New Risk Category Level 1</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for category in riskcategorylevel1_list %}
+        <tr>
+          <td>{{ category.name }}</td>
+          <td>
+            <a href="{% url 'riskcategorylevel1_detail' category.pk %}" class="btn btn-sm btn-info">View</a>
+            <a href="{% url 'riskcategorylevel1_update' category.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+            <a href="{% url 'riskcategorylevel1_delete' category.pk %}" class="btn btn-sm btn-danger">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

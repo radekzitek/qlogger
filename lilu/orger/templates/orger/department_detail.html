@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <h1>Department Details</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ department.name }}</h5>
+            <p class="card-text">Company: {{ department.company.name }}</p>
+            <p class="card-text">
+                Manager Position:
+                {% if department.manager_position %}
+                {{ department.manager_position.title }}
+                {% else %}
+                None
+                {% endif %}
+            </p>
+            <p class="card-text">
+                Parent Department:
+                {% if department.parent_department %}
+                {{ department.parent_department.name }}
+                {% else %}
+                None
+                {% endif %}
+            </p>
+            <a href="{% url 'department_list' %}" class="btn btn-primary">Back to List</a>
+            <a href="{% url 'department_update' department.pk %}" class="btn btn-secondary">Edit</a>
+            <a href="{% url 'department_delete' department.pk %}" class="btn btn-danger">Delete</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

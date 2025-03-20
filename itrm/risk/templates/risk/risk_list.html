@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Risk List</h1>
+  <a href="{% url 'risk_create' %}" class="btn btn-primary">Create New Risk</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Risk ID</th>
+        <th>Risk Name</th>
+        <th>Risk Category</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for risk in risk_list %}
+        <tr>
+          <td>{{ risk.risk_id }}</td>
+          <td>{{ risk.risk_name }}</td>
+          <td>{{ risk.risk_category }}</td>
+          <td>
+            <a href="{% url 'risk_detail' risk.pk %}" class="btn btn-sm btn-info">View</a>
+            <a href="{% url 'risk_update' risk.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+            <a href="{% url 'risk_delete' risk.pk %}" class="btn btn-sm btn-danger">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

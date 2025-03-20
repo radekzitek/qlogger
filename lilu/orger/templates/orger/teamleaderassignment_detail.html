@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <h1>Team Leader Assignment Details</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ team_leader_assignment.team.name }} - {{ team_leader_assignment.leader.first_name }} {{ team_leader_assignment.leader.last_name }}</h5>
+            <p class="card-text">Team: {{ team_leader_assignment.team.name }}</p>
+            <p class="card-text">Leader: {{ team_leader_assignment.leader.first_name }} {{ team_leader_assignment.leader.last_name }}</p>
+            <p class="card-text">Assigned Date: {{ team_leader_assignment.assigned_date }}</p>
+            <a href="{% url 'teamleaderassignment_list' %}" class="btn btn-primary">Back to List</a>
+            <a href="{% url 'teamleaderassignment_update' team_leader_assignment.pk %}" class="btn btn-secondary">Edit</a>
+            <a href="{% url 'teamleaderassignment_delete' team_leader_assignment.pk %}" class="btn btn-danger">Delete</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

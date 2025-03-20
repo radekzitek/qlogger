@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Risk Detail</h1>
+  <dl>
+    <dt>Risk ID:</dt>
+    <dd>{{ risk.risk_id }}</dd>
+    <dt>Risk Name:</dt>
+    <dd>{{ risk.risk_name }}</dd>
+    <dt>Risk Category:</dt>
+    <dd>{{ risk.risk_category }}</dd>
+    <dt>Risk Description:</dt>
+    <dd>{{ risk.risk_description }}</dd>
+    <dt>Potential Impact:</dt>
+    <dd>{{ risk.potential_impact }}</dd>
+    <dt>Likelihood of Occurrence:</dt>
+    <dd>{{ risk.get_likelihood_of_occurrence_display }}</dd>
+    <dt>Inherent Risk Score:</dt>
+    <dd>{{ risk.inherent_risk_score }}</dd>
+    <dt>Risk Owner:</dt>
+    <dd>{{ risk.risk_owner }}</dd>
+    <dt>Date Identified:</dt>
+    <dd>{{ risk.date_identified }}</dd>
+    <dt>Status:</dt>
+    <dd>{{ risk.get_status_display }}</dd>
+    <dt>Relevant EU Regulations:</dt>
+    <dd>{{ risk.relevant_eu_regulations }}</dd>
+    <dt>Associated Assets:</dt>
+    <dd>
+      <ul>
+        {% for asset in risk.associated_assets.all %}
+          <li>{{ asset.asset_name }}</li>
+        {% endfor %}
+      </ul>
+    </dd>
+     <dt>Associated Controls:</dt>
+    <dd>
+      <ul>
+        {% for control in risk.associated_controls.all %}
+          <li>{{ control.control_name }}</li>
+        {% endfor %}
+      </ul>
+    </dd>
+  </dl>
+  <a href="{% url 'risk_list' %}" class="btn btn-secondary">Back to List</a>
+  <a href="{% url 'risk_update' risk.pk %}" class="btn btn-primary">Edit</a>
+{% endblock %}
