@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Delete Control</h1>
+  <p>Are you sure you want to delete "{{ control.control_name }}"?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a href="{% url 'control_list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

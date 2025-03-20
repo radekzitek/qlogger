@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Asset List</h1>
+  <a href="{% url 'asset_create' %}" class="btn btn-primary">Create New Asset</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Asset ID</th>
+        <th>Asset Name</th>
+        <th>Asset Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for asset in asset_list %}
+        <tr>
+          <td>{{ asset.asset_id }}</td>
+          <td>{{ asset.asset_name }}</td>
+          <td>{{ asset.asset_type }}</td>
+          <td>
+            <a href="{% url 'asset_detail' asset.pk %}" class="btn btn-sm btn-info">View</a>
+            <a href="{% url 'asset_update' asset.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+            <a href="{% url 'asset_delete' asset.pk %}" class="btn btn-sm btn-danger">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

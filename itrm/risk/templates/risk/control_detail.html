@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Control Detail</h1>
+  <dl>
+    <dt>Control ID:</dt>
+    <dd>{{ control.control_id }}</dd>
+    <dt>Control Name:</dt>
+    <dd>{{ control.control_name }}</dd>
+    <dt>Control Objective:</dt>
+    <dd>{{ control.control_objective }}</dd>
+    <dt>Control Description:</dt>
+    <dd>{{ control.control_description }}</dd>
+    <dt>Control Type:</dt>
+    <dd>{{ control.get_control_type_display }}</dd>
+    <dt>Implementation Status:</dt>
+    <dd>{{ control.get_implementation_status_display }}</dd>
+    <dt>Effectiveness Rating:</dt>
+    <dd>{{ control.get_effectiveness_rating_display }}</dd>
+    <dt>Owner:</dt>
+    <dd>{{ control.owner }}</dd>
+    <dt>Associated Risks:</dt>
+    <dd>
+      <ul>
+        {% for risk in control.associated_risks.all %}
+          <li>{{ risk.risk_name }}</li>
+        {% endfor %}
+      </ul>
+    </dd>
+    <dt>Associated Assets:</dt>
+    <dd>
+      <ul>
+        {% for asset in control.associated_assets.all %}
+          <li>{{ asset.asset_name }}</li>
+        {% endfor %}
+      </ul>
+    </dd>
+  </dl>
+  <a href="{% url 'control_list' %}" class="btn btn-secondary">Back to List</a>
+  <a href="{% url 'control_update' control.pk %}" class="btn btn-primary">Edit</a>
+{% endblock %}

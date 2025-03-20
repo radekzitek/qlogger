@@ -140,7 +140,7 @@ services:
     volumes:
       - ./fluent-bit/fluent-bit-django.conf:/fluent-bit/etc/fluent-bit.conf
       # - ./fluent-bit/parsers-django.conf:/fluent-bit/etc/parsers.conf
-      - /home/radekzitek/Code/qlogger/lilu/logs:/var/lib/logs:ro # Needed for docker input plugin.
+      - /home/radekzitek/Code/qlogger/itrm/logs:/var/lib/logs:ro # Needed for docker input plugin.
     depends_on:
       - opensearch-node1
     networks:

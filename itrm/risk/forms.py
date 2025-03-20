@@ -1,5 +1,5 @@
 from django import forms
-from .models import Risk
+from .models import Risk, Asset
 import datetime
 
 class RiskForm(forms.ModelForm):
@@ -38,3 +38,24 @@ class RiskForm(forms.ModelForm):
         if score == '':
             return None  # Or a default value if appropriate
         return int(score)
+
+class AssetForm(forms.ModelForm):
+    class Meta:
+        model = Asset
+        fields = ['asset_id', 'asset_name', 'asset_type', 'description', 'criticality_level', 'owner', 'location', 'associated_risks', 'associated_controls']
+        widgets = {
+            'asset_id': forms.TextInput(attrs={'readonly': 'readonly'}),  # Make asset_id readonly
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Generate asset_id
+        if not self.instance.pk:
+            last_asset = Asset.objects.order_by('-asset_id').first()
+            if last_asset:
+                last_id = int(last_asset.asset_id[4:])  # Extract number from 'ASSTnnn'
+                new_id = last_id + 1
+            else:
+                new_id = 1
+            self.fields['asset_id'].initial = f'ASST{new_id:03}'
+            self.fields['asset_id'].widget.attrs['readonly'] = True  # Make it readonly

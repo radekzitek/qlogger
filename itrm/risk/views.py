@@ -3,7 +3,8 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from .models import RiskCategoryLevel1, RiskCategoryLevel2, Risk, Asset, Control, MitigationAction, ProgressTracking
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import RiskForm
+from .forms import RiskForm, AssetForm  # Import AssetForm
+import datetime
 
 # Mixin to require login for all views
 
@@ -135,16 +136,14 @@ class AssetDetailView(LoginRequiredMixin, DetailView):
 
 class AssetCreateView(LoginRequiredMixin, CreateView):
     model = Asset
-    fields = ['asset_id', 'asset_name', 'asset_type', 'description', 'criticality_level',
-              'owner', 'location', 'associated_risks', 'associated_controls']
+    form_class = AssetForm  # Use AssetForm
     template_name = 'risk/asset_form.html'
     success_url = reverse_lazy('asset_list')
 
 
 class AssetUpdateView(LoginRequiredMixin, UpdateView):
     model = Asset
-    fields = ['asset_id', 'asset_name', 'asset_type', 'description', 'criticality_level',
-              'owner', 'location', 'associated_risks', 'associated_controls']
+    form_class = AssetForm  # Use AssetForm
     template_name = 'risk/asset_form.html'
     success_url = reverse_lazy('asset_list')
 

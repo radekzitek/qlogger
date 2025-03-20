@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Control List</h1>
+  <a href="{% url 'control_create' %}" class="btn btn-primary">Create New Control</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Control ID</th>
+        <th>Control Name</th>
+        <th>Control Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for control in control_list %}
+        <tr>
+          <td>{{ control.control_id }}</td>
+          <td>{{ control.control_name }}</td>
+          <td>{{ control.control_type }}</td>
+          <td>
+            <a href="{% url 'control_detail' control.pk %}" class="btn btn-sm btn-info">View</a>
+            <a href="{% url 'control_update' control.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+            <a href="{% url 'control_delete' control.pk %}" class="btn btn-sm btn-danger">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

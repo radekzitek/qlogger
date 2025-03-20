@@ -76,7 +76,7 @@ class Asset(models.Model):
         ],
         default='Medium',
     )
-    owner = models.CharField(max_length=255)
+    owner = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, related_name='owned_assets')  # Add this line
     location = models.CharField(max_length=255)
     associated_risks = models.ManyToManyField('Risk', related_name='assets', blank=True)
     associated_controls = models.ManyToManyField('Control', related_name='assets', blank=True)

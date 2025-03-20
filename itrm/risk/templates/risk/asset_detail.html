@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Asset Detail</h1>
+  <dl>
+    <dt>Asset ID:</dt>
+    <dd>{{ asset.asset_id }}</dd>
+    <dt>Asset Name:</dt>
+    <dd>{{ asset.asset_name }}</dd>
+    <dt>Asset Type:</dt>
+    <dd>{{ asset.get_asset_type_display }}</dd>
+    <dt>Description:</dt>
+    <dd>{{ asset.description }}</dd>
+    <dt>Criticality Level:</dt>
+    <dd>{{ asset.get_criticality_level_display }}</dd>
+    <dt>Owner:</dt>
+    <dd>{{ asset.owner.name }}</dd>
+    <dt>Location:</dt>
+    <dd>{{ asset.location }}</dd>
+    <dt>Associated Risks:</dt>
+    <dd>
+      <ul>
+        {% for risk in asset.associated_risks.all %}
+          <li>{{ risk.risk_name }}</li>
+        {% endfor %}
+      </ul>
+    </dd>
+    <dt>Associated Controls:</dt>
+    <dd>
+      <ul>
+        {% for control in asset.associated_controls.all %}
+          <li>{{ control.control_name }}</li>
+        {% endfor %}
+      </ul>
+    </dd>
+  </dl>
+  <a href="{% url 'asset_list' %}" class="btn btn-secondary">Back to List</a>
+  <a href="{% url 'asset_update' asset.pk %}" class="btn btn-primary">Edit</a>
+{% endblock %}
