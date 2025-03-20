@@ -5,7 +5,59 @@
   <h1>{% if form.instance.pk %}Edit Risk{% else %}Create Risk{% endif %}</h1>
   <form method="post">
     {% csrf_token %}
-    {% bootstrap_form form %}
+
+    <div class="row mb-3">
+      <div class="col-md-1">
+        {% bootstrap_field form.risk_id %}
+      </div>
+      <div class="col-md-5">
+        {% bootstrap_field form.risk_name label="Risk Name" %}
+      </div>
+      <div class="col-md-6">
+        {% bootstrap_field form.risk_category %}
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        {% bootstrap_field form.risk_description %}
+      </div>
+      <div class="col-md-6">
+        {% bootstrap_field form.potential_impact %}
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-3">
+        {% bootstrap_field form.likelihood_of_occurrence %}
+      </div>
+      <div class="col-md-3">
+        {% bootstrap_field form.inherent_risk_score %}
+      </div>
+      <div class="col-md-3">
+        {% bootstrap_field form.risk_owner %}
+      </div>
+      <div class="col-md-3">
+        {% bootstrap_field form.date_identified %}
+      </div>
+    </div>
+
+    <div class="mb-3">
+      {% bootstrap_field form.status %}
+    </div>
+    <div class="mb-3">
+      {% bootstrap_field form.relevant_eu_regulations %}
+    </div>
+    <div class="mb-3">
+      {% bootstrap_field form.associated_assets %}
+    </div>
+    <div class="mb-3">
+      {% bootstrap_field form.associated_controls %}
+    </div>
+    <div class="mb-3">
+      {% bootstrap_field form.associated_mitigation_actions %}
+    </div>
+
     <button type="submit" class="btn btn-primary">Save</button>
     <a href="{% url 'risk_list' %}" class="btn btn-secondary">Cancel</a>
   </form>
