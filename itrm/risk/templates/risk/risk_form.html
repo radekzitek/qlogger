@@ -54,7 +54,7 @@
         <h3>
           Available Assets
           <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#assetModal">
-            Create New Asset
+            New
           </button>
         </h3>
         <select id="available-assets" class="form-control" multiple size="8">
@@ -81,7 +81,12 @@
 
     <div class="row mb-3">
       <div class="col-md-5">
-        <h3>Available Controls</h3>
+        <h3>
+          Available Controls
+          <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#controlModal">
+            New
+          </button>
+        </h3>
         <select id="available-controls" class="form-control" multiple size="8">
           {% for control in available_controls %}
             {% if control not in associated_controls %}
@@ -106,7 +111,12 @@
 
     <div class="row mb-3">
       <div class="col-md-5">
-        <h3>Available Mitigation Actions</h3>
+        <h3>
+          Available Mitigation Actions
+          <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#mitigationActionModal">
+            New
+          </button>
+        </h3>
         <select id="available-mitigation-actions" class="form-control" multiple size="8">
           {% for mitigation_action in available_mitigation_actions %}
             {% if mitigation_action not in associated_mitigation_actions %}
@@ -150,6 +160,50 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary" id="saveAsset">Save Asset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Control Modal -->
+  <div class="modal fade" id="controlModal" tabindex="-1" aria-labelledby="controlModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="controlModalLabel">Create New Control</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="controlForm" method="post">
+            {% csrf_token %}
+            {% bootstrap_form control_form %}
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="saveControl">Save Control</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mitigation Action Modal -->
+  <div class="modal fade" id="mitigationActionModal" tabindex="-1" aria-labelledby="mitigationActionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="mitigationActionModalLabel">Create New Mitigation Action</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="mitigationActionForm" method="post">
+            {% csrf_token %}
+            {% bootstrap_form mitigation_action_form %}
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="saveMitigationAction">Save Mitigation Action</button>
         </div>
       </div>
     </div>
@@ -244,6 +298,68 @@
           } else {
             // Display errors (you'll need to handle this better in a real application)
             alert('Error creating asset: ' + data.errors);
+          }
+        });
+      });
+
+      // Control Modal JavaScript
+      const saveControlButton = document.getElementById('saveControl');
+      const controlForm = document.getElementById('controlForm');
+      const controlModal = new bootstrap.Modal(document.getElementById('controlModal'));
+
+      saveControlButton.addEventListener('click', function() {
+        const formData = new FormData(controlForm);
+
+        fetch("{% url 'control_create_ajax' %}", {  // ToDo: Create new url control_create_ajax
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Add the new control to the available controls list
+            const newOption = new Option(data.control_name, data.control_id);
+            document.getElementById('available-controls').add(newOption);
+
+            // Close the modal
+            controlModal.hide();
+          } else {
+            // Display errors (you'll need to handle this better in a real application)
+            alert('Error creating control: ' + data.errors);
+          }
+        });
+      });
+
+      // Mitigation Action Modal JavaScript
+      const saveMitigationActionButton = document.getElementById('saveMitigationAction');
+      const mitigationActionForm = document.getElementById('mitigationActionForm');
+      const mitigationActionModal = new bootstrap.Modal(document.getElementById('mitigationActionModal'));
+
+      saveMitigationActionButton.addEventListener('click', function() {
+        const formData = new FormData(mitigationActionForm);
+
+        fetch("{% url 'mitigationaction_create_ajax' %}", {  // ToDo: Create new url mitigationaction_create_ajax
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Add the new mitigation action to the available mitigation actions list
+            const newOption = new Option(data.mitigation_action_description, data.mitigation_action_id);
+            document.getElementById('available-mitigation-actions').add(newOption);
+
+            // Close the modal
+            mitigationActionModal.hide();
+          } else {
+            // Display errors (you'll need to handle this better in a real application)
+            alert('Error creating mitigation action: ' + data.errors);
           }
         });
       });

@@ -18,6 +18,8 @@ from .risk_views import (
     RiskCreateView,
     RiskUpdateView,
     RiskDeleteView,
+    ControlCreateAjaxView,
+    MitigationActionCreateAjaxView,
 )
 from .asset_views import (
     AssetListView,

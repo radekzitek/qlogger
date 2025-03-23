@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Mitigation Action List</h1>
+  <a href="{% url 'mitigationaction_create' %}" class="btn btn-primary">Create New Mitigation Action</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Mitigation Action ID</th>
+        <th>Risk</th>
+        <th>Action Description</th>
+        <th>Priority</th>
+        <th>Assigned To</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for mitigation_action in mitigationaction_list %}
+        <tr>
+          <td>{{ mitigation_action.mitigation_action_id }}</td>
+          <td>{{ mitigation_action.risk }}</td>
+          <td>{{ mitigation_action.action_description }}</td>
+          <td>{{ mitigation_action.get_priority_display }}</td>
+          <td>{{ mitigation_action.assigned_to }}</td>
+          <td>
+            <a href="{% url 'mitigationaction_detail' mitigation_action.pk %}" class="btn btn-sm btn-info">View</a>
+            <a href="{% url 'mitigationaction_update' mitigation_action.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+            <a href="{% url 'mitigationaction_delete' mitigation_action.pk %}" class="btn btn-sm btn-danger">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Risk, Asset, Control, MitigationAction
+from .models import Risk, Asset, Control, MitigationAction, ProgressTracking
 from org.models import Department  # Import Department model
 import datetime
 
@@ -43,7 +43,7 @@ class RiskForm(forms.ModelForm):
 class AssetForm(forms.ModelForm):
     class Meta:
         model = Asset
-        fields = ['asset_id', 'asset_name', 'asset_type', 'description', 'criticality_level', 'owner', 'location', 'associated_risks', 'associated_controls']
+        fields = ['asset_id', 'asset_name', 'asset_type', 'description', 'criticality_level', 'owner', 'location'] # Removed associated_controls
         widgets = {
             'asset_id': forms.TextInput(attrs={'readonly': 'readonly'}),  # Make asset_id readonly
         }
@@ -61,36 +61,91 @@ class AssetForm(forms.ModelForm):
             self.fields['asset_id'].initial = f'ASST{new_id:03}'
             self.fields['asset_id'].widget.attrs['readonly'] = True  # Make it readonly
 
-class AssetModalForm(forms.Form):
-    asset_id = forms.CharField(disabled=True, required=False, label="Asset ID")
-    asset_name = forms.CharField(max_length=255, label="Asset Name")
-    asset_type = forms.CharField(max_length=255, label="Asset Type")
-    description = forms.CharField(widget=forms.Textarea, required=False, label="Description")
-    criticality_level = forms.CharField(max_length=255, label="Criticality Level")
-    owner = forms.ModelChoiceField(queryset=Department.objects.all(), label="Owner")
-    location = forms.CharField(max_length=255, required=False, label="Location")
+class AssetModalForm(forms.ModelForm):
+    class Meta:
+        model = Asset
+        fields = ['asset_name', 'asset_type', 'description', 'criticality_level', 'owner', 'location'] # Excluded asset_id and associated_controls
+        # No widgets needed here, as we want the default widgets
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Generate asset_id
-        if not 'instance' in kwargs or not kwargs['instance']:
+        if not self.instance.pk:
             last_asset = Asset.objects.order_by('-asset_id').first()
             if last_asset:
                 last_id = int(last_asset.asset_id[4:])  # Extract number from 'ASSTnnn'
                 new_id = last_id + 1
             else:
                 new_id = 1
-            self.fields['asset_id'].initial = f'ASST{new_id:03}'
+            self.fields['asset_id'] = forms.CharField(initial=f'ASST{new_id:03}', disabled=True, required=False)
 
-    def save(self):
-        asset = Asset(
-            asset_id=self.fields['asset_id'].initial,
-            asset_name=self.cleaned_data['asset_name'],
-            asset_type=self.cleaned_data['asset_type'],
-            description=self.cleaned_data['description'],
-            criticality_level=self.cleaned_data['criticality_level'],
-            owner=self.cleaned_data['owner'],
-            location=self.cleaned_data['location'],
-        )
-        asset.save()
-        return asset
+class ControlForm(forms.ModelForm):
+    class Meta:
+        model = Control
+        fields = ['control_id', 'control_name', 'control_objective', 'control_description', 'control_type',
+                  'implementation_status', 'effectiveness_rating', 'owner'] # Removed associated_assets
+        widgets = {
+            'control_id': forms.TextInput(attrs={'readonly': 'readonly'}),  # Make control_id readonly
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Generate control_id
+        if not self.instance.pk:
+            last_control = Control.objects.order_by('-control_id').first()
+            if last_control:
+                last_id = int(last_control.control_id[4:])  # Extract number from 'CTRLnnn'
+                new_id = last_id + 1
+            else:
+                new_id = 1
+            self.fields['control_id'].initial = f'CTRL{new_id:03}'
+            self.fields['control_id'].widget.attrs['readonly'] = True  # Make it readonly
+
+class MitigationActionForm(forms.ModelForm):
+    class Meta:
+        model = MitigationAction
+        fields = ['mitigation_action_id', 'risk', 'action_description', 'priority', 'assigned_to', 'target_start_date',
+                  'target_end_date', 'status', 'estimated_cost', 'actual_cost', 'expected_outcome']
+        widgets = {
+            'target_start_date': forms.DateInput(attrs={'type': 'date'}),
+            'target_end_date': forms.DateInput(attrs={'type': 'date'}),
+            'mitigation_action_id': forms.TextInput(attrs={'readonly': 'readonly'}),  # Make mitigation_action_id readonly
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Generate mitigation_action_id
+        if not self.instance.pk:
+            last_mitigation_action = MitigationAction.objects.order_by('-mitigation_action_id').first()
+            if last_mitigation_action:
+                last_id = int(last_mitigation_action.mitigation_action_id[3:])  # Extract number from 'MITnnn'
+                new_id = last_id + 1
+            else:
+                new_id = 1
+            self.fields['mitigation_action_id'].initial = f'MIT{new_id:03}'
+            self.fields['mitigation_action_id'].widget.attrs['readonly'] = True  # Make it readonly
+
+class ProgressTrackingForm(forms.ModelForm):
+    class Meta:
+        model = ProgressTracking
+        fields = ['progress_tracking_id', 'mitigation_action', 'date_of_update', 'progress_update', 'percentage_completion',
+                  'actual_start_date', 'actual_end_date', 'effectiveness_assessment', 'updated_residual_risk']
+        widgets = {
+            'date_of_update': forms.DateInput(attrs={'type': 'date'}),
+            'actual_start_date': forms.DateInput(attrs={'type': 'date'}),
+            'actual_end_date': forms.DateInput(attrs={'type': 'date'}),
+            'progress_tracking_id': forms.TextInput(attrs={'readonly': 'readonly'}),  # Make progress_tracking_id readonly
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Generate progress_tracking_id
+        if not self.instance.pk:
+            last_progress_tracking = ProgressTracking.objects.order_by('-progress_tracking_id').first()
+            if last_progress_tracking:
+                last_id = int(last_progress_tracking.progress_tracking_id[4:])  # Extract number from 'PROGnnn'
+                new_id = last_id + 1
+            else:
+                new_id = 1
+            self.fields['progress_tracking_id'].initial = f'PROG{new_id:03}'
+            self.fields['progress_tracking_id'].widget.attrs['readonly'] = True  # Make it readonly

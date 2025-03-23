@@ -78,8 +78,6 @@ class Asset(models.Model):
     )
     owner = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, related_name='owned_assets')  # Add this line
     location = models.CharField(max_length=255)
-    associated_risks = models.ManyToManyField('Risk', related_name='assets', blank=True)
-    associated_controls = models.ManyToManyField('Control', related_name='assets', blank=True)
 
     def __str__(self):
         return self.asset_name
@@ -117,7 +115,6 @@ class Control(models.Model):
         default='Medium',
     )
     owner = models.CharField(max_length=255)
-    associated_risks = models.ManyToManyField('Risk', related_name='controls', blank=True)
     associated_assets = models.ManyToManyField('Asset', related_name='controls', blank=True)
 
     def __str__(self):

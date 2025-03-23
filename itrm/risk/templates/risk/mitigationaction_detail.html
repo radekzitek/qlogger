@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Mitigation Action Detail</h1>
+  <dl>
+    <dt>Mitigation Action ID:</dt>
+    <dd>{{ mitigationaction.mitigation_action_id }}</dd>
+    <dt>Risk:</dt>
+    <dd>{{ mitigationaction.risk }}</dd>
+    <dt>Action Description:</dt>
+    <dd>{{ mitigationaction.action_description }}</dd>
+    <dt>Priority:</dt>
+    <dd>{{ mitigationaction.get_priority_display }}</dd>
+    <dt>Assigned To:</dt>
+    <dd>{{ mitigationaction.assigned_to }}</dd>
+    <dt>Target Start Date:</dt>
+    <dd>{{ mitigationaction.target_start_date }}</dd>
+    <dt>Target End Date:</dt>
+    <dd>{{ mitigationaction.target_end_date }}</dd>
+    <dt>Status:</dt>
+    <dd>{{ mitigationaction.get_status_display }}</dd>
+    <dt>Estimated Cost:</dt>
+    <dd>{{ mitigationaction.estimated_cost }}</dd>
+    <dt>Actual Cost:</dt>
+    <dd>{{ mitigationaction.actual_cost }}</dd>
+    <dt>Expected Outcome:</dt>
+    <dd>{{ mitigationaction.expected_outcome }}</dd>
+  </dl>
+  <a href="{% url 'mitigationaction_list' %}" class="btn btn-secondary">Back to List</a>
+  <a href="{% url 'mitigationaction_update' mitigationaction.pk %}" class="btn btn-primary">Edit</a>
+{% endblock %}

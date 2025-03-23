@@ -18,22 +18,15 @@
     <dd>{{ asset.owner.name }}</dd>
     <dt>Location:</dt>
     <dd>{{ asset.location }}</dd>
-    <dt>Associated Risks:</dt>
-    <dd>
-      <ul>
-        {% for risk in asset.associated_risks.all %}
-          <li>{{ risk.risk_name }}</li>
-        {% endfor %}
-      </ul>
-    </dd>
-    <dt>Associated Controls:</dt>
-    <dd>
-      <ul>
-        {% for control in asset.associated_controls.all %}
-          <li>{{ control.control_name }}</li>
-        {% endfor %}
-      </ul>
-    </dd>
+    {# Remove this section #}
+    {# <dt>Associated Controls:</dt> #}
+    {# <dd> #}
+    {#   <ul> #}
+    {#     {% for control in asset.associated_controls.all %} #}
+    {#       <li>{{ control.control_name }}</li> #}
+    {#     {% endfor %} #}
+    {#   </ul> #}
+    {# </dd> #}
   </dl>
   <a href="{% url 'asset_list' %}" class="btn btn-secondary">Back to List</a>
   <a href="{% url 'asset_update' asset.pk %}" class="btn btn-primary">Edit</a>

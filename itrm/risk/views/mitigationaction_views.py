@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from ..models import MitigationAction
 from django.contrib.auth.mixins import LoginRequiredMixin
+from ..forms import MitigationActionForm
 
 # Mixin to require login for all views
 class LoginRequiredMixin(LoginRequiredMixin):
@@ -24,19 +25,24 @@ class MitigationActionDetailView(LoginRequiredMixin, DetailView):
 
 class MitigationActionCreateView(LoginRequiredMixin, CreateView):
     model = MitigationAction
-    fields = ['mitigation_action_id', 'risk', 'action_description', 'priority', 'assigned_to', 'target_start_date',
-              'target_end_date', 'status', 'estimated_cost', 'actual_cost', 'expected_outcome', 'created_by', 'updated_by']
+    form_class = MitigationActionForm
     template_name = 'risk/mitigationaction_form.html'
     success_url = reverse_lazy('mitigationaction_list')
 
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user.username
+        form.instance.updated_by = self.request.user.username
+        return super().form_valid(form)
 
 class MitigationActionUpdateView(LoginRequiredMixin, UpdateView):
     model = MitigationAction
-    fields = ['mitigation_action_id', 'risk', 'action_description', 'priority', 'assigned_to', 'target_start_date',
-              'target_end_date', 'status', 'estimated_cost', 'actual_cost', 'expected_outcome', 'created_by', 'updated_by']
+    form_class = MitigationActionForm
     template_name = 'risk/mitigationaction_form.html'
     success_url = reverse_lazy('mitigationaction_list')
 
+    def form_valid(self, form):
+        form.instance.updated_by = self.request.user.username
+        return super().form_valid(form)
 
 class MitigationActionDeleteView(LoginRequiredMixin, DeleteView):
     model = MitigationAction

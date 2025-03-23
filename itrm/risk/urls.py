@@ -1,4 +1,5 @@
 from django.urls import path
+from . import views
 from .views import (
     RiskCategoryLevel1ListView,
     RiskCategoryLevel1DetailView,
@@ -75,6 +76,7 @@ urlpatterns = [
     path('controls/create/', ControlCreateView.as_view(), name='control_create'),
     path('controls/<int:pk>/update/', ControlUpdateView.as_view(), name='control_update'),
     path('controls/<int:pk>/delete/', ControlDeleteView.as_view(), name='control_delete'),
+    path('controls/create_ajax/', views.ControlCreateAjaxView.as_view(), name='control_create_ajax'),
 
     # MitigationAction URLs
     path('mitigationactions/', MitigationActionListView.as_view(), name='mitigationaction_list'),
@@ -82,6 +84,7 @@ urlpatterns = [
     path('mitigationactions/create/', MitigationActionCreateView.as_view(), name='mitigationaction_create'),
     path('mitigationactions/<int:pk>/update/', MitigationActionUpdateView.as_view(), name='mitigationaction_update'),
     path('mitigationactions/<int:pk>/delete/', MitigationActionDeleteView.as_view(), name='mitigationaction_delete'),
+    path('mitigationactions/create_ajax/', views.MitigationActionCreateAjaxView.as_view(), name='mitigationaction_create_ajax'),
 
     # ProgressTracking URLs
     path('progresstracking/', ProgressTrackingListView.as_view(), name='progresstracking_list'),

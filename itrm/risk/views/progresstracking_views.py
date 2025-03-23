@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from ..models import ProgressTracking
 from django.contrib.auth.mixins import LoginRequiredMixin
+from ..forms import ProgressTrackingForm
 
 # Mixin to require login for all views
 class LoginRequiredMixin(LoginRequiredMixin):
@@ -24,16 +25,14 @@ class ProgressTrackingDetailView(LoginRequiredMixin, DetailView):
 
 class ProgressTrackingCreateView(LoginRequiredMixin, CreateView):
     model = ProgressTracking
-    fields = ['progress_tracking_id', 'mitigation_action', 'date_of_update', 'progress_update', 'percentage_completion',
-              'actual_start_date', 'actual_end_date', 'effectiveness_assessment', 'updated_residual_risk', 'updated_by']
+    form_class = ProgressTrackingForm
     template_name = 'risk/progresstracking_form.html'
     success_url = reverse_lazy('progresstracking_list')
 
 
 class ProgressTrackingUpdateView(LoginRequiredMixin, UpdateView):
     model = ProgressTracking
-    fields = ['progress_tracking_id', 'mitigation_action', 'date_of_update', 'progress_update', 'percentage_completion',
-              'actual_start_date', 'actual_end_date', 'effectiveness_assessment', 'updated_residual_risk', 'updated_by']
+    form_class = ProgressTrackingForm
     template_name = 'risk/progresstracking_form.html'
     success_url = reverse_lazy('progresstracking_list')
 

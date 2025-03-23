@@ -20,14 +20,6 @@
     <dd>{{ control.get_effectiveness_rating_display }}</dd>
     <dt>Owner:</dt>
     <dd>{{ control.owner }}</dd>
-    <dt>Associated Risks:</dt>
-    <dd>
-      <ul>
-        {% for risk in control.associated_risks.all %}
-          <li>{{ risk.risk_name }}</li>
-        {% endfor %}
-      </ul>
-    </dd>
     <dt>Associated Assets:</dt>
     <dd>
       <ul>

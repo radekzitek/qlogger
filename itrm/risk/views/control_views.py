@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from ..models import Control
 from django.contrib.auth.mixins import LoginRequiredMixin
+from ..forms import ControlForm
 
 # Mixin to require login for all views
 class LoginRequiredMixin(LoginRequiredMixin):
@@ -24,16 +25,14 @@ class ControlDetailView(LoginRequiredMixin, DetailView):
 
 class ControlCreateView(LoginRequiredMixin, CreateView):
     model = Control
-    fields = ['control_id', 'control_name', 'control_objective', 'control_description', 'control_type',
-              'implementation_status', 'effectiveness_rating', 'owner', 'associated_risks', 'associated_assets']
+    form_class = ControlForm
     template_name = 'risk/control_form.html'
     success_url = reverse_lazy('control_list')
 
 
 class ControlUpdateView(LoginRequiredMixin, UpdateView):
     model = Control
-    fields = ['control_id', 'control_name', 'control_objective', 'control_description', 'control_type',
-              'implementation_status', 'effectiveness_rating', 'owner', 'associated_risks', 'associated_assets']
+    form_class = ControlForm
     template_name = 'risk/control_form.html'
     success_url = reverse_lazy('control_list')
 

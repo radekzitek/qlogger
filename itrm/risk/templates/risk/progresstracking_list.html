@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Progress Tracking List</h1>
+  <a href="{% url 'progresstracking_create' %}" class="btn btn-primary">Create New Progress Tracking</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Progress Tracking ID</th>
+        <th>Mitigation Action</th>
+        <th>Date of Update</th>
+        <th>Progress Update</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for progresstracking in progresstracking_list %}
+        <tr>
+          <td>{{ progresstracking.progress_tracking_id }}</td>
+          <td>{{ progresstracking.mitigation_action }}</td>
+          <td>{{ progresstracking.date_of_update }}</td>
+          <td>{{ progresstracking.progress_update }}</td>
+          <td>
+            <a href="{% url 'progresstracking_detail' progresstracking.pk %}" class="btn btn-sm btn-info">View</a>
+            <a href="{% url 'progresstracking_update' progresstracking.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+            <a href="{% url 'progresstracking_delete' progresstracking.pk %}" class="btn btn-sm btn-danger">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Delete Progress Tracking</h1>
+  <p>Are you sure you want to delete "{{ progresstracking.progress_tracking_id }}"?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="{% url 'progresstracking_list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Progress Tracking Detail</h1>
+  <dl>
+    <dt>Progress Tracking ID:</dt>
+    <dd>{{ progresstracking.progress_tracking_id }}</dd>
+    <dt>Mitigation Action:</dt>
+    <dd>{{ progresstracking.mitigation_action }}</dd>
+    <dt>Date of Update:</dt>
+    <dd>{{ progresstracking.date_of_update }}</dd>
+    <dt>Progress Update:</dt>
+    <dd>{{ progresstracking.progress_update }}</dd>
+    <dt>Percentage Completion:</dt>
+    <dd>{{ progresstracking.percentage_completion }}</dd>
+    <dt>Actual Start Date:</dt>
+    <dd>{{ progresstracking.actual_start_date }}</dd>
+    <dt>Actual End Date:</dt>
+    <dd>{{ progresstracking.actual_end_date }}</dd>
+    <dt>Effectiveness Assessment:</dt>
+    <dd>{{ progresstracking.effectiveness_assessment }}</dd>
+    <dt>Updated Residual Risk:</dt>
+    <dd>{{ progresstracking.get_updated_residual_risk_display }}</dd>
+  </dl>
+  <a href="{% url 'progresstracking_list' %}" class="btn btn-secondary">Back to List</a>
+  <a href="{% url 'progresstracking_update' progresstracking.pk %}" class="btn btn-primary">Edit</a>
+{% endblock %}
