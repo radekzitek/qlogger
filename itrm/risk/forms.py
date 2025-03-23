@@ -1,5 +1,6 @@
 from django import forms
-from .models import Risk, Asset
+from .models import Risk, Asset, Control, MitigationAction
+from org.models import Department  # Import Department model
 import datetime
 
 class RiskForm(forms.ModelForm):
@@ -12,7 +13,7 @@ class RiskForm(forms.ModelForm):
     class Meta:
         model = Risk
         fields = ['risk_id', 'risk_name', 'risk_category', 'risk_description', 'potential_impact', 'likelihood_of_occurrence',
-                  'inherent_risk_score', 'risk_owner', 'date_identified', 'status', 'relevant_eu_regulations', 'associated_assets', 'associated_controls', 'associated_mitigation_actions']
+                  'inherent_risk_score', 'risk_owner', 'date_identified', 'status', 'relevant_eu_regulations', 'associated_controls', 'associated_mitigation_actions'] # Removed associated_assets
         widgets = {
             'date_identified': forms.DateInput(attrs={'type': 'date'}),
             'risk_id': forms.TextInput(attrs={'readonly': 'readonly'}),  # Make risk_id readonly
@@ -59,3 +60,37 @@ class AssetForm(forms.ModelForm):
                 new_id = 1
             self.fields['asset_id'].initial = f'ASST{new_id:03}'
             self.fields['asset_id'].widget.attrs['readonly'] = True  # Make it readonly
+
+class AssetModalForm(forms.Form):
+    asset_id = forms.CharField(disabled=True, required=False, label="Asset ID")
+    asset_name = forms.CharField(max_length=255, label="Asset Name")
+    asset_type = forms.CharField(max_length=255, label="Asset Type")
+    description = forms.CharField(widget=forms.Textarea, required=False, label="Description")
+    criticality_level = forms.CharField(max_length=255, label="Criticality Level")
+    owner = forms.ModelChoiceField(queryset=Department.objects.all(), label="Owner")
+    location = forms.CharField(max_length=255, required=False, label="Location")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Generate asset_id
+        if not 'instance' in kwargs or not kwargs['instance']:
+            last_asset = Asset.objects.order_by('-asset_id').first()
+            if last_asset:
+                last_id = int(last_asset.asset_id[4:])  # Extract number from 'ASSTnnn'
+                new_id = last_id + 1
+            else:
+                new_id = 1
+            self.fields['asset_id'].initial = f'ASST{new_id:03}'
+
+    def save(self):
+        asset = Asset(
+            asset_id=self.fields['asset_id'].initial,
+            asset_name=self.cleaned_data['asset_name'],
+            asset_type=self.cleaned_data['asset_type'],
+            description=self.cleaned_data['description'],
+            criticality_level=self.cleaned_data['criticality_level'],
+            owner=self.cleaned_data['owner'],
+            location=self.cleaned_data['location'],
+        )
+        asset.save()
+        return asset

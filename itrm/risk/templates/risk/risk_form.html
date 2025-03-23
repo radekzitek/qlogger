@@ -48,17 +48,205 @@
     <div class="mb-3">
       {% bootstrap_field form.relevant_eu_regulations %}
     </div>
-    <div class="mb-3">
-      {% bootstrap_field form.associated_assets %}
+
+    <div class="row mb-3">
+      <div class="col-md-5">
+        <h3>
+          Available Assets
+          <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#assetModal">
+            Create New Asset
+          </button>
+        </h3>
+        <select id="available-assets" class="form-control" multiple size="8">
+          {% for asset in available_assets %}
+            {% if asset not in associated_assets %}
+              <option value="{{ asset.pk }}">{{ asset.asset_name }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 d-flex flex-column justify-content-center">
+        <button type="button" id="add-asset" class="btn btn-success mb-2">&gt;&gt;</button>
+        <button type="button" id="remove-asset" class="btn btn-danger">&lt;&lt;</button>
+      </div>
+      <div class="col-md-5">
+        <h3>Associated Assets</h3>
+        <select id="associated-assets" name="associated_assets" class="form-control" multiple size="8">
+          {% for asset in associated_assets %}
+            <option value="{{ asset.pk }}" selected>{{ asset.asset_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
     </div>
-    <div class="mb-3">
-      {% bootstrap_field form.associated_controls %}
+
+    <div class="row mb-3">
+      <div class="col-md-5">
+        <h3>Available Controls</h3>
+        <select id="available-controls" class="form-control" multiple size="8">
+          {% for control in available_controls %}
+            {% if control not in associated_controls %}
+              <option value="{{ control.pk }}">{{ control.control_name }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 d-flex flex-column justify-content-center">
+        <button type="button" id="add-control" class="btn btn-success mb-2">&gt;&gt;</button>
+        <button type="button" id="remove-control" class="btn btn-danger">&lt;&lt;</button>
+      </div>
+      <div class="col-md-5">
+        <h3>Associated Controls</h3>
+        <select id="associated-controls" name="associated_controls" class="form-control" multiple size="8">
+          {% for control in associated_controls %}
+            <option value="{{ control.pk }}" selected>{{ control.control_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
     </div>
-    <div class="mb-3">
-      {% bootstrap_field form.associated_mitigation_actions %}
+
+    <div class="row mb-3">
+      <div class="col-md-5">
+        <h3>Available Mitigation Actions</h3>
+        <select id="available-mitigation-actions" class="form-control" multiple size="8">
+          {% for mitigation_action in available_mitigation_actions %}
+            {% if mitigation_action not in associated_mitigation_actions %}
+              <option value="{{ mitigation_action.pk }}">{{ mitigation_action.action_description }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 d-flex flex-column justify-content-center">
+        <button type="button" id="add-mitigation-action" class="btn btn-success mb-2">&gt;&gt;</button>
+        <button type="button" id="remove-mitigation-action" class="btn btn-danger">&lt;&lt;</button>
+      </div>
+      <div class="col-md-5">
+        <h3>Associated Mitigation Actions</h3>
+        <select id="associated-mitigation-actions" name="associated_mitigation_actions" class="form-control" multiple size="8">
+          {% for mitigation_action in associated_mitigation_actions %}
+            <option value="{{ mitigation_action.pk }}" selected>{{ mitigation_action.action_description }}</option>
+          {% endfor %}
+        </select>
+      </div>
     </div>
 
     <button type="submit" class="btn btn-primary">Save</button>
     <a href="{% url 'risk_list' %}" class="btn btn-secondary">Cancel</a>
   </form>
+
+  <!-- Asset Modal -->
+  <div class="modal fade" id="assetModal" tabindex="-1" aria-labelledby="assetModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="assetModalLabel">Create New Asset</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="assetForm" method="post">
+            {% csrf_token %}
+            {% bootstrap_form asset_form %}
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="saveAsset">Save Asset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Asset Management
+      const addAssetButton = document.getElementById('add-asset');
+      const removeAssetButton = document.getElementById('remove-asset');
+      const availableAssetsSelect = document.getElementById('available-assets');
+      const associatedAssetsSelect = document.getElementById('associated-assets');
+
+      addAssetButton.addEventListener('click', function() {
+        Array.from(availableAssetsSelect.selectedOptions).forEach(option => {
+          associatedAssetsSelect.add(new Option(option.text, option.value, false, true));
+          option.remove();
+        });
+      });
+
+      removeAssetButton.addEventListener('click', function() {
+        Array.from(associatedAssetsSelect.selectedOptions).forEach(option => {
+          availableAssetsSelect.add(new Option(option.text, option.value));
+          option.remove();
+        });
+      });
+
+      // Control Management
+      const addControlButton = document.getElementById('add-control');
+      const removeControlButton = document.getElementById('remove-control');
+      const availableControlsSelect = document.getElementById('available-controls');
+      const associatedControlsSelect = document.getElementById('associated-controls');
+
+      addControlButton.addEventListener('click', function() {
+        Array.from(availableControlsSelect.selectedOptions).forEach(option => {
+          associatedControlsSelect.add(new Option(option.text, option.value, false, true));
+          option.remove();
+        });
+      });
+
+      removeControlButton.addEventListener('click', function() {
+        Array.from(associatedControlsSelect.selectedOptions).forEach(option => {
+          availableControlsSelect.add(new Option(option.text, option.value));
+          option.remove();
+        });
+      });
+
+      // Mitigation Action Management
+      const addMitigationActionButton = document.getElementById('add-mitigation-action');
+      const removeMitigationActionButton = document.getElementById('remove-mitigation-action');
+      const availableMitigationActionsSelect = document.getElementById('available-mitigation-actions');
+      const associatedMitigationActionsSelect = document.getElementById('associated-mitigation-actions');
+
+      addMitigationActionButton.addEventListener('click', function() {
+        Array.from(availableMitigationActionsSelect.selectedOptions).forEach(option => {
+          associatedMitigationActionsSelect.add(new Option(option.text, option.value, false, true));
+          option.remove();
+        });
+      });
+
+      removeMitigationActionButton.addEventListener('click', function() {
+        Array.from(associatedMitigationActionsSelect.selectedOptions).forEach(option => {
+          availableMitigationActionsSelect.add(new Option(option.text, option.value));
+          option.remove();
+        });
+      });
+
+      // Asset Modal JavaScript
+      const saveAssetButton = document.getElementById('saveAsset');
+      const assetForm = document.getElementById('assetForm');
+      const assetModal = new bootstrap.Modal(document.getElementById('assetModal'));
+
+      saveAssetButton.addEventListener('click', function() {
+        const formData = new FormData(assetForm);
+
+        fetch("{% url 'asset_create_ajax' %}", {  // Create new url asset_create_ajax
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Add the new asset to the available assets list
+            const newOption = new Option(data.asset_name, data.asset_id);
+            document.getElementById('available-assets').add(newOption);
+
+            // Close the modal
+            assetModal.hide();
+          } else {
+            // Display errors (you'll need to handle this better in a real application)
+            alert('Error creating asset: ' + data.errors);
+          }
+        });
+      });
+    });
+  </script>
 {% endblock %}
