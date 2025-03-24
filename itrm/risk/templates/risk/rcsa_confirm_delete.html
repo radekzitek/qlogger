@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Delete RCSA</h1>
+  <p>Are you sure you want to delete "{{ rcsa.rcsa_id }}"?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="{% url 'rcsa_list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

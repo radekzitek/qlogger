@@ -1,6 +1,7 @@
 from django.db import models
 from org.models import Department  # Import the Department model from the org app
 
+
 class RiskCategoryLevel1(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True)
@@ -8,8 +9,10 @@ class RiskCategoryLevel1(models.Model):
     def __str__(self):
         return self.name
 
+
 class RiskCategoryLevel2(models.Model):
-    level1 = models.ForeignKey(RiskCategoryLevel1, on_delete=models.CASCADE, related_name='level2_categories')
+    level1 = models.ForeignKey(
+        RiskCategoryLevel1, on_delete=models.CASCADE, related_name='level2_categories')
     name = models.CharField(max_length=255)
     relevant_eu_regulations = models.TextField(blank=True)
     description = models.TextField(blank=True)
@@ -17,23 +20,37 @@ class RiskCategoryLevel2(models.Model):
     def __str__(self):
         return f"{self.level1.name} - {self.name}"
 
+
 class Risk(models.Model):
     risk_id = models.CharField(max_length=50, unique=True)
     risk_name = models.CharField(max_length=255)
-    risk_category = models.ForeignKey(RiskCategoryLevel2, on_delete=models.SET_NULL, null=True, blank=True)
+    risk_category = models.ForeignKey(
+        RiskCategoryLevel2, on_delete=models.SET_NULL, null=True, blank=True)
     risk_description = models.TextField()
     potential_impact = models.TextField()
     likelihood_of_occurrence = models.CharField(
         max_length=20,
         choices=[
-            ('Low', 'Low'),
-            ('Medium', 'Medium'),
-            ('High', 'High'),
+            ('Low', 'Low (Unlikely, annual likelihood < 10%)'),
+            ('Medium', 'Medium (Possible, annual likelihood 10-50%)'),
+            ('High', 'High (Almost Certain, annual likelihood > 50%)'),
         ],
         default='Medium',
     )
-    inherent_risk_score = models.IntegerField(null=True, blank=True)  # You might want to calculate this dynamically
-    risk_owner = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, related_name='owned_risks')  # Add this line
+    inherent_risk_score = models.CharField(
+        max_length=20,
+        choices=[
+            ('Low', 'Low (Immaterial or Minor)'),
+            ('Medium', 'Medium (Moderate)'),
+            ('High', 'High (Significant)'),
+            ('Critical', 'Critical (Severe)'),
+        ],
+        default='Medium',
+        null=True,
+        blank=True
+    )
+    risk_owner = models.ForeignKey(Department, on_delete=models.SET_NULL,
+                                   null=True, blank=True, related_name='owned_risks')  # Add this line
     date_identified = models.DateField()
     status = models.CharField(
         max_length=20,
@@ -46,12 +63,17 @@ class Risk(models.Model):
         default='Open',
     )
     relevant_eu_regulations = models.TextField(blank=True)
-    associated_assets = models.ManyToManyField('Asset', related_name='risks', blank=True)
-    associated_controls = models.ManyToManyField('Control', related_name='risks', blank=True)
-    associated_mitigation_actions = models.ManyToManyField('MitigationAction', related_name='risks', blank=True) # Assuming you'll create a MitigationAction model
+    associated_assets = models.ManyToManyField(
+        'Asset', related_name='risks', blank=True)
+    associated_controls = models.ManyToManyField(
+        'Control', related_name='risks', blank=True)
+    associated_mitigation_actions = models.ManyToManyField(
+        # Assuming you'll create a MitigationAction model
+        'MitigationAction', related_name='risks', blank=True)
 
     def __str__(self):
         return self.risk_name
+
 
 class Asset(models.Model):
     asset_id = models.CharField(max_length=50, unique=True)
@@ -76,11 +98,13 @@ class Asset(models.Model):
         ],
         default='Medium',
     )
-    owner = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, related_name='owned_assets')  # Add this line
+    owner = models.ForeignKey(Department, on_delete=models.SET_NULL,
+                              null=True, blank=True, related_name='owned_assets')  # Add this line
     location = models.CharField(max_length=255)
 
     def __str__(self):
         return self.asset_name
+
 
 class Control(models.Model):
     control_id = models.CharField(max_length=50, unique=True)
@@ -115,10 +139,12 @@ class Control(models.Model):
         default='Medium',
     )
     owner = models.CharField(max_length=255)
-    associated_assets = models.ManyToManyField('Asset', related_name='controls', blank=True)
+    associated_assets = models.ManyToManyField(
+        'Asset', related_name='controls', blank=True)
 
     def __str__(self):
         return self.control_name
+
 
 class RCSA(models.Model):
     rcsa_id = models.CharField(max_length=50, unique=True)
@@ -130,9 +156,10 @@ class RCSA(models.Model):
     inherent_risk_rating = models.CharField(
         max_length=20,
         choices=[
-            ('Low', 'Low'),
-            ('Medium', 'Medium'),
-            ('High', 'High'),
+            ('Low', 'Low (Immaterial or Minor)'),
+            ('Medium', 'Medium (Moderate)'),
+            ('High', 'High (Significant)'),
+            ('Critical', 'Critical (Severe)'),
         ],
         default='Medium',
     )
@@ -157,9 +184,10 @@ class RCSA(models.Model):
     residual_risk_rating = models.CharField(
         max_length=20,
         choices=[
-            ('Low', 'Low'),
-            ('Medium', 'Medium'),
-            ('High', 'High'),
+            ('Low', 'Low (Immaterial or Minor)'),
+            ('Medium', 'Medium (Moderate)'),
+            ('High', 'High (Significant)'),
+            ('Critical', 'Critical (Severe)'),
         ],
         default='Medium',
     )
@@ -181,9 +209,11 @@ class RCSA(models.Model):
     def __str__(self):
         return f"RCSA: {self.rcsa_id} - Risk: {self.risk_assessed.risk_name} - Control: {self.control_assessed.control_name}"
 
+
 class MitigationAction(models.Model):
     mitigation_action_id = models.CharField(max_length=50, unique=True)
-    risk = models.ForeignKey(Risk, on_delete=models.CASCADE, related_name='mitigation_actions')
+    risk = models.ForeignKey(
+        Risk, on_delete=models.CASCADE, related_name='mitigation_actions')
     action_description = models.TextField()
     priority = models.CharField(
         max_length=20,
@@ -207,8 +237,10 @@ class MitigationAction(models.Model):
         ],
         default='To Do',
     )
-    estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    actual_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    estimated_cost = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True)
+    actual_cost = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True)
     expected_outcome = models.TextField()
     date_created = models.DateField(auto_now_add=True)
     created_by = models.CharField(max_length=255)
@@ -218,9 +250,11 @@ class MitigationAction(models.Model):
     def __str__(self):
         return f"Mitigation Action: {self.mitigation_action_id} - Risk: {self.risk.risk_name}"
 
+
 class ProgressTracking(models.Model):
     progress_tracking_id = models.CharField(max_length=50, unique=True)
-    mitigation_action = models.ForeignKey(MitigationAction, on_delete=models.CASCADE, related_name='progress_updates')
+    mitigation_action = models.ForeignKey(
+        MitigationAction, on_delete=models.CASCADE, related_name='progress_updates')
     date_of_update = models.DateField()
     progress_update = models.TextField()
     percentage_completion = models.IntegerField(default=0)
@@ -230,9 +264,10 @@ class ProgressTracking(models.Model):
     updated_residual_risk = models.CharField(
         max_length=20,
         choices=[
-            ('Low', 'Low'),
-            ('Medium', 'Medium'),
-            ('High', 'High'),
+            ('Low', 'Low (Immaterial or Minor)'),
+            ('Medium', 'Medium (Moderate)'),
+            ('High', 'High (Significant)'),
+            ('Critical', 'Critical (Severe)'),
         ],
         default='Medium',
     )

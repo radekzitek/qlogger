@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>RCSA Detail</h1>
+  <dl>
+    <dt>RCSA ID:</dt>
+    <dd>{{ rcsa.rcsa_id }}</dd>
+    <dt>Assessment Date:</dt>
+    <dd>{{ rcsa.assessment_date }}</dd>
+    <dt>Assessed By:</dt>
+    <dd>{{ rcsa.assessed_by }}</dd>
+    <dt>Assessment Scope:</dt>
+    <dd>{{ rcsa.assessment_scope }}</dd>
+    <dt>Risk Assessed:</dt>
+    <dd>{{ rcsa.risk_assessed }}</dd>
+    <dt>Control Assessed:</dt>
+    <dd>{{ rcsa.control_assessed }}</dd>
+    <dt>Inherent Risk Rating:</dt>
+    <dd>{{ rcsa.get_inherent_risk_rating_display }}</dd>
+    <dt>Design Effectiveness:</dt>
+    <dd>{{ rcsa.get_design_effectiveness_display }}</dd>
+    <dt>Operating Effectiveness:</dt>
+    <dd>{{ rcsa.get_operating_effectiveness_display }}</dd>
+    <dt>Residual Risk Rating:</dt>
+    <dd>{{ rcsa.get_residual_risk_rating_display }}</dd>
+    <dt>Risk Acceptance:</dt>
+    <dd>{{ rcsa.risk_acceptance }}</dd>
+    <dt>Findings/Observations:</dt>
+    <dd>{{ rcsa.findings_observations }}</dd>
+    <dt>Recommendations:</dt>
+    <dd>{{ rcsa.recommendations }}</dd>
+    <dt>Recommendation Status:</dt>
+    <dd>{{ rcsa.get_recommendation_status_display }}</dd>
+    <dt>Due Date for Recommendations:</dt>
+    <dd>{{ rcsa.due_date_for_recommendations }}</dd>
+    <dt>Responsibility for Recommendations:</dt>
+    <dd>{{ rcsa.responsibility_for_recommendations }}</dd>
+  </dl>
+  <a href="{% url 'rcsa_list' %}" class="btn btn-secondary">Back to List</a>
+  <a href="{% url 'rcsa_update' rcsa.pk %}" class="btn btn-primary">Edit</a>
+{% endblock %}

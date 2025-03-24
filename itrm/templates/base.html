@@ -14,21 +14,38 @@
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'dashboard' %}">Organization Dashboard</a>
-        <a class="navbar-brand" href="{% url 'risk_dashboard' %}">Risk Dashboard</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
+            <li><a class="nav-link" href="{% url 'dashboard' %}">Organization Dashboard</a></li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Organization
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                {% for company in companies %}
-                  <li><a class="dropdown-item" href="{% url 'organization' company.pk %}">{{ company.name }}</a></li>
-                {% endfor %}
+                <li><a class="dropdown-item" href="{% url 'company_list' %}">Companies</a></li>
+                <li><a class="dropdown-item" href="{% url 'department_list' %}">Departments</a></li>
+                <li><a class="dropdown-item" href="{% url 'position_list' %}">Positions</a></li>
+                <li><a class="dropdown-item" href="{% url 'employee_list' %}">Employees</a></li>
+                <li><a class="dropdown-item" href="{% url 'team_list' %}">Teams</a></li>
+                <li><a class="dropdown-item" href="{% url 'employeepositionassignment_list' %}">Employee Position Assignments</a></li>
+                <li><a class="dropdown-item" href="{% url 'teammembership_list' %}">Team Memberships</a></li>
+                <li><a class="dropdown-item" href="{% url 'teamleaderassignment_list' %}">Team Leader Assignments</a></li>
+              </ul>
+            </li>
+            <li><a class="nav-link" href="{% url 'risk_dashboard' %}">Risk Dashboard</a></li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="riskDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Risk Management
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="riskDropdownMenuLink">
+                <li><a class="dropdown-item" href="{% url 'riskcategorylevel1_list' %}">Risk Category Level 1</a></li>
+                <li><a class="dropdown-item" href="{% url 'riskcategorylevel2_list' %}">Risk Category Level 2</a></li>
+                <li><a class="dropdown-item" href="{% url 'risk_list' %}">Risks</a></li>
+                <li><a class="dropdown-item" href="{% url 'asset_list' %}">Assets</a></li>
+                <li><a class="dropdown-item" href="{% url 'control_list' %}">Controls</a></li>
+                <li><a class="dropdown-item" href="{% url 'mitigationaction_list' %}">Mitigation Actions</a></li>
+                <li><a class="dropdown-item" href="{% url 'progresstracking_list' %}">Progress Tracking</a></li>
+                <li><a class="dropdown-item" href="{% url 'rcsa_list' %}">RCSA</a></li>
               </ul>
             </li>
           </ul>

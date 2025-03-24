@@ -39,6 +39,13 @@ from .views import (
     ProgressTrackingDeleteView,
     RiskDashboardView,
 )
+from .views.rcsa_views import (
+    RCSAListView,
+    RCSADetailView,
+    RCSACreateView,
+    RCSAUpdateView,
+    RCSADeleteView,
+)
 
 urlpatterns = [
     # RiskCategoryLevel1 URLs
@@ -92,6 +99,13 @@ urlpatterns = [
     path('progresstracking/create/', ProgressTrackingCreateView.as_view(), name='progresstracking_create'),
     path('progresstracking/<int:pk>/update/', ProgressTrackingUpdateView.as_view(), name='progresstracking_update'),
     path('progresstracking/<int:pk>/delete/', ProgressTrackingDeleteView.as_view(), name='progresstracking_delete'),
+
+    # RCSA URLs
+    path('rcsa/', RCSAListView.as_view(), name='rcsa_list'),
+    path('rcsa/<int:pk>/', RCSADetailView.as_view(), name='rcsa_detail'),
+    path('rcsa/create/', RCSACreateView.as_view(), name='rcsa_create'),
+    path('rcsa/<int:pk>/update/', RCSAUpdateView.as_view(), name='rcsa_update'),
+    path('rcsa/<int:pk>/delete/', RCSADeleteView.as_view(), name='rcsa_delete'),
 
     path('dashboard/', RiskDashboardView.as_view(), name='risk_dashboard'),
 ]

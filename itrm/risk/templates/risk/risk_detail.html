@@ -34,11 +34,19 @@
         {% endfor %}
       </ul>
     </dd>
-     <dt>Associated Controls:</dt>
+    <dt>Associated Controls:</dt>
     <dd>
       <ul>
         {% for control in risk.associated_controls.all %}
           <li>{{ control.control_name }}</li>
+        {% endfor %}
+      </ul>
+    </dd>
+    <dt>Associated Mitigation Actions:</dt>
+    <dd>
+      <ul>
+        {% for mitigation_action in risk.associated_mitigation_actions.all %}
+          <li>{{ mitigation_action.action_description }}</li>
         {% endfor %}
       </ul>
     </dd>

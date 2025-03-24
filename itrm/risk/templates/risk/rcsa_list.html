@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>RCSA List</h1>
+  <a href="{% url 'rcsa_create' %}" class="btn btn-primary">Create New RCSA</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>RCSA ID</th>
+        <th>Risk</th>
+        <th>Control</th>
+        <th>Assessment Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rcsa in rcsa_list %}
+        <tr>
+          <td>{{ rcsa.rcsa_id }}</td>
+          <td>{{ rcsa.risk_assessed }}</td>
+          <td>{{ rcsa.control_assessed }}</td>
+          <td>{{ rcsa.assessment_date }}</td>
+          <td>
+            <a href="{% url 'rcsa_detail' rcsa.pk %}" class="btn btn-sm btn-info">View</a>
+            <a href="{% url 'rcsa_update' rcsa.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+            <a href="{% url 'rcsa_delete' rcsa.pk %}" class="btn btn-sm btn-danger">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

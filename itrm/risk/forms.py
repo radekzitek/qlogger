@@ -1,5 +1,5 @@
 from django import forms
-from .models import Risk, Asset, Control, MitigationAction, ProgressTracking
+from .models import Risk, Asset, Control, MitigationAction, ProgressTracking, RCSA
 from org.models import Department  # Import Department model
 import datetime
 
@@ -149,3 +149,30 @@ class ProgressTrackingForm(forms.ModelForm):
                 new_id = 1
             self.fields['progress_tracking_id'].initial = f'PROG{new_id:03}'
             self.fields['progress_tracking_id'].widget.attrs['readonly'] = True  # Make it readonly
+
+class RCSAForm(forms.ModelForm):
+    class Meta:
+        model = RCSA
+        fields = ['rcsa_id', 'assessment_date', 'assessed_by', 'assessment_scope', 'risk_assessed',
+                  'control_assessed', 'inherent_risk_rating', 'design_effectiveness',
+                  'operating_effectiveness', 'residual_risk_rating', 'risk_acceptance',
+                  'findings_observations', 'recommendations', 'recommendation_status',
+                  'due_date_for_recommendations', 'responsibility_for_recommendations']
+        widgets = {
+            'assessment_date': forms.DateInput(attrs={'type': 'date'}),
+            'due_date_for_recommendations': forms.DateInput(attrs={'type': 'date'}),
+            'rcsa_id': forms.TextInput(attrs={'readonly': 'readonly'}),  # Make rcsa_id readonly
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Generate rcsa_id
+        if not self.instance.pk:
+            last_rcsa = RCSA.objects.order_by('-rcsa_id').first()
+            if last_rcsa:
+                last_id = int(last_rcsa.rcsa_id[4:])  # Extract number from 'RCSA001'
+                new_id = last_id + 1
+            else:
+                new_id = 1
+            self.fields['rcsa_id'].initial = f'RCSA{new_id:03}'
+            self.fields['rcsa_id'].widget.attrs['readonly'] = True  # Make it readonly
