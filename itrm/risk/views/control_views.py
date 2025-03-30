@@ -4,13 +4,19 @@ from django.urls import reverse_lazy
 from ..models import Control
 from django.contrib.auth.mixins import LoginRequiredMixin
 from ..forms import ControlForm
+from django.http import JsonResponse
+from django.views import View
 
 # Mixin to require login for all views
+
+
 class LoginRequiredMixin(LoginRequiredMixin):
     login_url = '/login/'  # Replace with your login URL
     redirect_field_name = 'next'
 
 # Control Views
+
+
 class ControlListView(LoginRequiredMixin, ListView):
     model = Control
     template_name = 'risk/control_list.html'
@@ -41,3 +47,20 @@ class ControlDeleteView(LoginRequiredMixin, DeleteView):
     model = Control
     template_name = 'risk/control_confirm_delete.html'
     success_url = reverse_lazy('control_list')
+
+
+class ControlCreateAjaxView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        form = ControlForm(request.POST)
+        if form.is_valid():
+            control = form.save()
+            return JsonResponse({
+                'success': True,
+                'control_id': control.pk,
+                'control_name': control.control_name
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'errors': form.errors
+            })

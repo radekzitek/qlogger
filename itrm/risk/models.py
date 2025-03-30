@@ -1,5 +1,5 @@
 from django.db import models
-from org.models import Department  # Import the Department model from the org app
+from org.models import Department, Position  # Import the Department model from the org app
 
 
 class RiskCategoryLevel1(models.Model):
@@ -19,6 +19,13 @@ class RiskCategoryLevel2(models.Model):
 
     def __str__(self):
         return f"{self.level1.name} - {self.name}"
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Risk(models.Model):
@@ -70,6 +77,7 @@ class Risk(models.Model):
     associated_mitigation_actions = models.ManyToManyField(
         # Assuming you'll create a MitigationAction model
         'MitigationAction', related_name='risks', blank=True)
+    tags = models.ManyToManyField(Tag, related_name='risks', blank=True)
 
     def __str__(self):
         return self.risk_name
@@ -224,7 +232,9 @@ class MitigationAction(models.Model):
         ],
         default='Medium',
     )
-    assigned_to = models.CharField(max_length=255)
+    assigned_to = models.ForeignKey(
+        Position, on_delete=models.SET_NULL, null=True, blank=True, related_name='mitigation_actions'
+    )
     target_start_date = models.DateField()
     target_end_date = models.DateField()
     status = models.CharField(

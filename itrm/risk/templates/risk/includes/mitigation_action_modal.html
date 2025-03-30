@@ -1,0 +1,52 @@
+{% extends 'risk/includes/modal.html' %}
+{% load django_bootstrap5 %}
+{% block modal_body %}
+  <form id="mitigationActionForm" method="post">
+    {% csrf_token %}
+    <div class="row mb-3">
+      <div class="col-md-6">
+        {% bootstrap_field mitigation_action_form.mitigation_action_id %}
+      </div>
+      <div class="col-md-6">
+        {% bootstrap_field mitigation_action_form.risk %}
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        {% bootstrap_field mitigation_action_form.action_description %}
+      </div>
+      <div class="col-md-6">
+        {% bootstrap_field mitigation_action_form.priority %}
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        {% bootstrap_field mitigation_action_form.assigned_to %}
+      </div>
+      <div class="col-md-6">
+        {% bootstrap_field mitigation_action_form.target_start_date %}
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        {% bootstrap_field mitigation_action_form.target_end_date %}
+      </div>
+      <div class="col-md-6">
+        {% bootstrap_field mitigation_action_form.status %}
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        {% bootstrap_field mitigation_action_form.estimated_cost %}
+      </div>
+      <div class="col-md-6">
+        {% bootstrap_field mitigation_action_form.actual_cost %}
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-12">
+        {% bootstrap_field mitigation_action_form.expected_outcome %}
+      </div>
+    </div>
+  </form>
+{% endblock %}

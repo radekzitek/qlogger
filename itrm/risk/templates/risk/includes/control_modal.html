@@ -1,0 +1,15 @@
+{% extends 'risk/includes/modal.html' %}
+{% load django_bootstrap5 %}
+{% block modal_body %}
+  <form id="controlForm" method="post">
+    {% csrf_token %}
+    {% bootstrap_field control_form.control_id %}
+    {% bootstrap_field control_form.control_name %}
+    {% bootstrap_field control_form.control_objective %}
+    {% bootstrap_field control_form.control_description %}
+    {% bootstrap_field control_form.control_type %}
+    {% bootstrap_field control_form.implementation_status %}
+    {% bootstrap_field control_form.effectiveness_rating %}
+    {% bootstrap_field control_form.owner %}
+  </form>
+{% endblock %}

@@ -18,8 +18,6 @@ from .risk_views import (
     RiskCreateView,
     RiskUpdateView,
     RiskDeleteView,
-    ControlCreateAjaxView,
-    MitigationActionCreateAjaxView,
 )
 from .asset_views import (
     AssetListView,
@@ -35,6 +33,7 @@ from .control_views import (
     ControlCreateView,
     ControlUpdateView,
     ControlDeleteView,
+    ControlCreateAjaxView,
 )
 from .mitigationaction_views import (
     MitigationActionListView,
@@ -42,6 +41,7 @@ from .mitigationaction_views import (
     MitigationActionCreateView,
     MitigationActionUpdateView,
     MitigationActionDeleteView,
+    MitigationActionCreateAjaxView,
 )
 from .progresstracking_views import (
     ProgressTrackingListView,

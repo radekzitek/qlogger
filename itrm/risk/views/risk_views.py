@@ -98,35 +98,3 @@ class RiskDeleteView(LoginRequiredMixin, DeleteView):
     model = Risk
     template_name = 'risk/risk_confirm_delete.html'
     success_url = reverse_lazy('risk_list')
-
-class ControlCreateAjaxView(LoginRequiredMixin, View):
-    def post(self, request, *args, **kwargs):
-        form = ControlForm(request.POST)
-        if form.is_valid():
-            control = form.save()
-            return JsonResponse({
-                'success': True,
-                'control_id': control.pk,
-                'control_name': control.control_name
-            })
-        else:
-            return JsonResponse({
-                'success': False,
-                'errors': form.errors
-            })
-
-class MitigationActionCreateAjaxView(LoginRequiredMixin, View):
-    def post(self, request, *args, **kwargs):
-        form = MitigationActionForm(request.POST)
-        if form.is_valid():
-            mitigation_action = form.save()
-            return JsonResponse({
-                'success': True,
-                'mitigation_action_id': mitigation_action.pk,
-                'mitigation_action_description': mitigation_action.action_description
-            })
-        else:
-            return JsonResponse({
-                'success': False,
-                'errors': form.errors
-            })

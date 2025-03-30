@@ -1,0 +1,9 @@
+{% extends 'risk/includes/modal.html' %}
+{% load django_bootstrap5 %}
+{% block modal_body %}
+  <form id="assetForm" method="post">
+    {% csrf_token %}
+    {% bootstrap_field asset_form.asset_id %}
+    {% bootstrap_form asset_form %}
+  </form>
+{% endblock %}

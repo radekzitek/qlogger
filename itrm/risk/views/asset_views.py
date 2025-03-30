@@ -52,7 +52,7 @@ class AssetCreateAjaxView(LoginRequiredMixin, View):
             asset = form.save()
             return JsonResponse({
                 'success': True,
-                'asset_id': asset.pk,
+                'asset_id': asset.asset_id,
                 'asset_name': asset.asset_name
             })
         else:

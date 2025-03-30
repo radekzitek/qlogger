@@ -1,8 +1,14 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load django_bootstrap5 %}
-
+{% load static %}
 {% block content %}
-  <h1>{% if form.instance.pk %}Edit Risk{% else %}Create Risk{% endif %}</h1>
+  <h1>
+    {% if form.instance.pk %}
+      Edit Risk
+    {% else %}
+      Create Risk
+    {% endif %}
+  </h1>
   <form method="post">
     {% csrf_token %}
 
@@ -11,7 +17,7 @@
         {% bootstrap_field form.risk_id %}
       </div>
       <div class="col-md-5">
-        {% bootstrap_field form.risk_name label="Risk Name" %}
+        {% bootstrap_field form.risk_name label='Risk Name' %}
       </div>
       <div class="col-md-6">
         {% bootstrap_field form.risk_category %}
@@ -49,13 +55,15 @@
       {% bootstrap_field form.relevant_eu_regulations %}
     </div>
 
+    <div class="mb-3">
+      {% bootstrap_field form.cdtags %}
+    </div>
+
     <div class="row mb-3">
       <div class="col-md-5">
         <h3>
           Available Assets
-          <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#assetModal">
-            New
-          </button>
+          <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#assetModal">New</button>
         </h3>
         <select id="available-assets" class="form-control" multiple size="8">
           {% for asset in available_assets %}
@@ -83,9 +91,7 @@
       <div class="col-md-5">
         <h3>
           Available Controls
-          <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#controlModal">
-            New
-          </button>
+          <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#controlModal">New</button>
         </h3>
         <select id="available-controls" class="form-control" multiple size="8">
           {% for control in available_controls %}
@@ -113,9 +119,7 @@
       <div class="col-md-5">
         <h3>
           Available Mitigation Actions
-          <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#mitigationActionModal">
-            New
-          </button>
+          <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#mitigationActionModal">New</button>
         </h3>
         <select id="available-mitigation-actions" class="form-control" multiple size="8">
           {% for mitigation_action in available_mitigation_actions %}
@@ -143,226 +147,15 @@
     <a href="{% url 'risk_list' %}" class="btn btn-secondary">Cancel</a>
   </form>
 
-  <!-- Asset Modal -->
-  <div class="modal fade" id="assetModal" tabindex="-1" aria-labelledby="assetModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="assetModalLabel">Create New Asset</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="assetForm" method="post">
-            {% csrf_token %}
-            {% bootstrap_form asset_form %}
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="saveAsset">Save Asset</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  {% include 'risk/includes/asset_modal.html' with modal_id='assetModal' modal_label_id='assetModalLabel' modal_title='Create New Asset' save_button_id='saveAsset' save_button_text='Save Asset' %}
 
-  <!-- Control Modal -->
-  <div class="modal fade" id="controlModal" tabindex="-1" aria-labelledby="controlModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="controlModalLabel">Create New Control</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="controlForm" method="post">
-            {% csrf_token %}
-            {% bootstrap_form control_form %}
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="saveControl">Save Control</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  {% include 'risk/includes/control_modal.html' with modal_id='controlModal' modal_label_id='controlModalLabel' modal_title='Create New Control' save_button_id='saveControl' save_button_text='Save Control' %}
 
-  <!-- Mitigation Action Modal -->
-  <div class="modal fade" id="mitigationActionModal" tabindex="-1" aria-labelledby="mitigationActionModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="mitigationActionModalLabel">Create New Mitigation Action</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="mitigationActionForm" method="post">
-            {% csrf_token %}
-            {% bootstrap_form mitigation_action_form %}
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="saveMitigationAction">Save Mitigation Action</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  {% include 'risk/includes/mitigation_action_modal.html' with modal_id='mitigationActionModal' modal_label_id='mitigationActionModalLabel' modal_title='Create New Mitigation Action' save_button_id='saveMitigationAction' save_button_text='Save Mitigation Action' modal_size='modal-lg' %}
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Asset Management
-      const addAssetButton = document.getElementById('add-asset');
-      const removeAssetButton = document.getElementById('remove-asset');
-      const availableAssetsSelect = document.getElementById('available-assets');
-      const associatedAssetsSelect = document.getElementById('associated-assets');
+  <script src="{% static 'js/asset_modal.js' %}"></script>
+  <script src="{% static 'js/control_modal.js' %}"></script>
+  <script src="{% static 'js/mitigation_action_modal.js' %}"></script>
 
-      addAssetButton.addEventListener('click', function() {
-        Array.from(availableAssetsSelect.selectedOptions).forEach(option => {
-          associatedAssetsSelect.add(new Option(option.text, option.value, false, true));
-          option.remove();
-        });
-      });
-
-      removeAssetButton.addEventListener('click', function() {
-        Array.from(associatedAssetsSelect.selectedOptions).forEach(option => {
-          availableAssetsSelect.add(new Option(option.text, option.value));
-          option.remove();
-        });
-      });
-
-      // Control Management
-      const addControlButton = document.getElementById('add-control');
-      const removeControlButton = document.getElementById('remove-control');
-      const availableControlsSelect = document.getElementById('available-controls');
-      const associatedControlsSelect = document.getElementById('associated-controls');
-
-      addControlButton.addEventListener('click', function() {
-        Array.from(availableControlsSelect.selectedOptions).forEach(option => {
-          associatedControlsSelect.add(new Option(option.text, option.value, false, true));
-          option.remove();
-        });
-      });
-
-      removeControlButton.addEventListener('click', function() {
-        Array.from(associatedControlsSelect.selectedOptions).forEach(option => {
-          availableControlsSelect.add(new Option(option.text, option.value));
-          option.remove();
-        });
-      });
-
-      // Mitigation Action Management
-      const addMitigationActionButton = document.getElementById('add-mitigation-action');
-      const removeMitigationActionButton = document.getElementById('remove-mitigation-action');
-      const availableMitigationActionsSelect = document.getElementById('available-mitigation-actions');
-      const associatedMitigationActionsSelect = document.getElementById('associated-mitigation-actions');
-
-      addMitigationActionButton.addEventListener('click', function() {
-        Array.from(availableMitigationActionsSelect.selectedOptions).forEach(option => {
-          associatedMitigationActionsSelect.add(new Option(option.text, option.value, false, true));
-          option.remove();
-        });
-      });
-
-      removeMitigationActionButton.addEventListener('click', function() {
-        Array.from(associatedMitigationActionsSelect.selectedOptions).forEach(option => {
-          availableMitigationActionsSelect.add(new Option(option.text, option.value));
-          option.remove();
-        });
-      });
-
-      // Asset Modal JavaScript
-      const saveAssetButton = document.getElementById('saveAsset');
-      const assetForm = document.getElementById('assetForm');
-      const assetModal = new bootstrap.Modal(document.getElementById('assetModal'));
-
-      saveAssetButton.addEventListener('click', function() {
-        const formData = new FormData(assetForm);
-
-        fetch("{% url 'asset_create_ajax' %}", {  // Create new url asset_create_ajax
-          method: 'POST',
-          body: formData,
-          headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            // Add the new asset to the available assets list
-            const newOption = new Option(data.asset_name, data.asset_id);
-            document.getElementById('available-assets').add(newOption);
-
-            // Close the modal
-            assetModal.hide();
-          } else {
-            // Display errors (you'll need to handle this better in a real application)
-            alert('Error creating asset: ' + data.errors);
-          }
-        });
-      });
-
-      // Control Modal JavaScript
-      const saveControlButton = document.getElementById('saveControl');
-      const controlForm = document.getElementById('controlForm');
-      const controlModal = new bootstrap.Modal(document.getElementById('controlModal'));
-
-      saveControlButton.addEventListener('click', function() {
-        const formData = new FormData(controlForm);
-
-        fetch("{% url 'control_create_ajax' %}", {  // ToDo: Create new url control_create_ajax
-          method: 'POST',
-          body: formData,
-          headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            // Add the new control to the available controls list
-            const newOption = new Option(data.control_name, data.control_id);
-            document.getElementById('available-controls').add(newOption);
-
-            // Close the modal
-            controlModal.hide();
-          } else {
-            // Display errors (you'll need to handle this better in a real application)
-            alert('Error creating control: ' + data.errors);
-          }
-        });
-      });
-
-      // Mitigation Action Modal JavaScript
-      const saveMitigationActionButton = document.getElementById('saveMitigationAction');
-      const mitigationActionForm = document.getElementById('mitigationActionForm');
-      const mitigationActionModal = new bootstrap.Modal(document.getElementById('mitigationActionModal'));
-
-      saveMitigationActionButton.addEventListener('click', function() {
-        const formData = new FormData(mitigationActionForm);
-
-        fetch("{% url 'mitigationaction_create_ajax' %}", {  // ToDo: Create new url mitigationaction_create_ajax
-          method: 'POST',
-          body: formData,
-          headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            // Add the new mitigation action to the available mitigation actions list
-            const newOption = new Option(data.mitigation_action_description, data.mitigation_action_id);
-            document.getElementById('available-mitigation-actions').add(newOption);
-
-            // Close the modal
-            mitigationActionModal.hide();
-          } else {
-            // Display errors (you'll need to handle this better in a real application)
-            alert('Error creating mitigation action: ' + data.errors);
-          }
-        });
-      });
-    });
-  </script>
+  <script src="{% static 'js/risk_form.js' %}"></script>
 {% endblock %}

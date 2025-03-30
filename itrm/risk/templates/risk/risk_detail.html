@@ -50,6 +50,8 @@
         {% endfor %}
       </ul>
     </dd>
+    <dt>Tags:</dt>
+    <dd>{{ risk.tags.all|join:", " }}</dd>
   </dl>
   <a href="{% url 'risk_list' %}" class="btn btn-secondary">Back to List</a>
   <a href="{% url 'risk_update' risk.pk %}" class="btn btn-primary">Edit</a>
