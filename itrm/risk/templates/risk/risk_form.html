@@ -155,7 +155,11 @@
 
   <script src="{% static 'js/asset_modal.js' %}"></script>
   <script src="{% static 'js/control_modal.js' %}"></script>
+  
+  <script>
+    const mitigationActionCreateAjaxUrl = "{% url 'mitigationaction_create_ajax' %}";
+  </script>
   <script src="{% static 'js/mitigation_action_modal.js' %}"></script>
-
+  
   <script src="{% static 'js/risk_form.js' %}"></script>
 {% endblock %}
